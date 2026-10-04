@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lead Finder — Toolme</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f6f8fb;
+    --card:#ffffff;
+    --card-2:#f9fafb;
+    --line:#e5e7eb;
+    --line-strong:#d1d5db;
+    --text:#0f172a;
+    --muted:#64748b;
+    --dim:#94a3b8;
+    --blue:#2563eb;
+    --blue-dark:#1d4ed8;
+    --blue-light:#eff6ff;
+    --green:#16a34a;
+    --green-light:#f0fdf4;
+    --purple:#7c3aed;
+    --orange:#ea580c;
+    --orange-light:#fff7ed;
+    --red:#dc2626;
+    --red-light:#fef2f2;
+    --yellow:#ca8a04;
+  }
+  html,body{height:100%}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+    padding-bottom:40px;
+    background-image:radial-gradient(circle at 100% 0%, rgba(37,99,235,.06) 0%, transparent 40%);
+    background-attachment:fixed;
+  }
+
+  /* nav */
+  .navbar{
+    background:rgba(255,255,255,.9);
+    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    padding:14px 20px;position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .back{
+    display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);
+    font-size:14px;font-weight:600;
+  }
+  .back:hover{color:var(--text)}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;
+    letter-spacing:-.3px;color:var(--text)}
+  .brand .mark{
+    width:24px;height:24px;border-radius:7px;
+    background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:900;color:#fff;
+    box-shadow:0 2px 8px rgba(37,99,235,.3);
+  }
+
+  .wrap{max-width:640px;margin:0 auto;padding:20px}
+
+  /* form card */
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:20px;margin-bottom:16px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04);
+  }
+  .card h2{
+    font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--muted);margin-bottom:14px;
+  }
+
+  .field{margin-bottom:14px;position:relative}
+  .field:last-of-type{margin-bottom:0}
+  label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+
+  input,select{
+    width:100%;padding:13px 14px;
+    border:1.5px solid var(--line-strong);border-radius:10px;
+    font:inherit;font-size:15px;background:#fff;color:var(--text);
+    outline:none;transition:border-color .15s,box-shadow .15s;
+    -webkit-appearance:none;appearance:none;
+  }
+  input:focus,select:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(37,99,235,.12);
+  }
+  input::placeholder{color:var(--dim)}
+
+  select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    padding-right:40px;
+  }
+
+  /* autocomplete dropdown */
+  .suggestions{
+    position:absolute;top:100%;left:0;right:0;z-index:30;
+    background:#fff;border:1px solid var(--line);
+    border-radius:10px;margin-top:6px;
+    max-height:240px;overflow-y:auto;
+    box-shadow:0 10px 30px rgba(15,23,42,.1);
+    display:none;
+  }
+  .suggestions.on{display:block}
+  .sugg{
+    padding:11px 14px;cursor:pointer;font-size:14.5px;
+    border-bottom:1px solid #f1f5f9;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .sugg:last-child{border-bottom:0}
+  .sugg:hover,.sugg.active{background:var(--blue-light)}
+  .sugg .city-name{font-weight:600}
+  .sugg .city-region{font-size:12px;color:var(--muted)}
+  .sugg mark{
+    background:rgba(37,99,235,.15);color:#1e40af;
+    padding:0 2px;border-radius:3px;font-weight:700;
+  }
+
+  /* mode toggle */
+  .mode-group{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .mode{
+    padding:16px 12px;border:1.5px solid var(--line-strong);border-radius:12px;
+    background:#fff;text-align:center;cursor:pointer;
+    transition:.15s;font-weight:700;font-size:14px;color:var(--muted);
+  }
+  .mode .ic{display:block;font-size:24px;margin-bottom:6px}
+  .mode.active{
+    border-color:var(--blue);background:var(--blue-light);color:var(--blue);
+    box-shadow:0 0 0 3px rgba(37,99,235,.08);
+  }
+
+  /* search button */
+  .btn-search{
+    width:100%;background:var(--blue);color:#fff;
+    padding:16px;font-size:16px;font-weight:700;
+    border:0;border-radius:12px;cursor:pointer;margin-top:16px;
+    box-shadow:0 4px 16px rgba(37,99,235,.25);
+    transition:background .15s,transform .1s;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .btn-search:hover:not(:disabled){background:var(--blue-dark)}
+  .btn-search:active:not(:disabled){transform:scale(.98)}
+  .btn-search:disabled{opacity:.6;cursor:not-allowed}
+
+  /* quick chips */
+  .quick-chips{
+    display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;
+  }
+  .chip{
+    background:var(--card-2);border:1px solid var(--line);
+    color:var(--muted);font-size:12.5px;font-weight:600;
+    padding:7px 12px;border-radius:99px;cursor:pointer;
+    transition:.15s;
+  }
+  .chip:hover{color:var(--blue);border-color:var(--blue);background:var(--blue-light)}
+
+  /* recent searches */
+  .recent{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+  .recent-title{
+    font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--muted);margin-bottom:10px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .recent-title button{
+    background:none;border:0;color:var(--blue);
+    font-size:11px;font-weight:700;cursor:pointer;
+    text-transform:none;letter-spacing:0;
+  }
+  .recent-list{display:flex;flex-direction:column;gap:6px}
+  .recent-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;background:var(--card-2);
+    border:1px solid var(--line);border-radius:8px;
+    font-size:13.5px;cursor:pointer;transition:.15s;
+    color:var(--text);
+  }
+  .recent-item:hover{border-color:var(--blue);background:var(--blue-light)}
+  .recent-item .ic{font-size:14px;flex:0 0 auto}
+  .recent-item .txt{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .recent-item .txt b{font-weight:600;color:var(--text)}
+  .recent-item .txt span{color:var(--muted);font-size:12px;display:block}
+
+  /* status / toast */
+  .status{
+    margin-top:14px;padding:14px 16px;border-radius:12px;
+    font-size:14px;display:none;line-height:1.5;
+    border:1px solid transparent;
+  }
+  .status.on{display:block}
+  .status.info{background:var(--blue-light);color:#1e40af;border-color:#bfdbfe}
+  .status.err{background:var(--red-light);color:#991b1b;border-color:#fecaca}
+  .status.ok{background:var(--green-light);color:#166534;border-color:#86efac}
+
+  /* loading skeleton */
+  .loading{display:none;margin-top:16px}
+  .loading.on{display:block}
+  .loading .bar{
+    background:linear-gradient(90deg,#f1f5f9 0%,#e2e8f0 50%,#f1f5f9 100%);
+    background-size:200% 100%;
+    animation:shimmer 1.4s infinite;
+    border-radius:12px;
+  }
+  .loading .row{height:80px;margin-bottom:12px}
+  @keyframes shimmer{
+    0%{background-position:200% 0}
+    100%{background-position:-200% 0}
+  }
+
+  /* results */
+  .results{display:none;margin-top:16px}
+  .results.on{display:block}
+
+  .count-card{
+    background:linear-gradient(135deg,var(--blue-light) 0%,#f5f3ff 100%);
+    border:1px solid #c7d2fe;
+    border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;
+  }
+  .count-card .num{
+    font-size:42px;font-weight:900;line-height:1;
+    background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    letter-spacing:-2px;
+  }
+  .count-card .lbl{font-size:13px;color:#475569;margin-top:6px;font-weight:600}
+  .count-card .sub{font-size:12px;color:var(--muted);margin-top:3px}
+
+  .actions-bar{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;
+  }
+  .actions-bar button{
+    background:#fff;border:1px solid var(--line-strong);
+    color:var(--text);padding:12px;font-size:13px;font-weight:700;
+    border-radius:10px;cursor:pointer;transition:.15s;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .actions-bar button:hover{background:var(--card-2);border-color:var(--blue);color:var(--blue)}
+  .actions-bar button.primary{
+    background:var(--blue);border-color:var(--blue);color:#fff;
+  }
+  .actions-bar button.primary:hover{background:var(--blue-dark);color:#fff}
+  .actions-bar button.full{grid-column:span 2}
+
+  /* result item */
+  .list{display:flex;flex-direction:column;gap:10px}
+  .item{
+    background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px;transition:.15s;
+    position:relative;
+    box-shadow:0 1px 3px rgba(15,23,42,.04);
+  }
+  .item:hover{border-color:var(--line-strong);box-shadow:0 4px 12px rgba(15,23,42,.06)}
+  .item-head{
+    display:flex;align-items:flex-start;gap:12px;margin-bottom:12px;
+  }
+  .item-idx{
+    flex:0 0 auto;width:28px;height:28px;border-radius:50%;
+    background:var(--blue-light);color:var(--blue);
+    font-size:12px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .item-body{flex:1;min-width:0}
+  .item-name{
+    font-size:15px;font-weight:700;line-height:1.3;margin-bottom:3px;
+    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;
+    -webkit-line-clamp:2;-webkit-box-orient:vertical;
+  }
+  .item-addr{
+    font-size:12px;color:var(--muted);line-height:1.4;
+    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;
+    -webkit-line-clamp:2;-webkit-box-orient:vertical;
+  }
+  .item-value{
+    background:var(--card-2);border:1px solid var(--line);
+    border-radius:10px;padding:12px 14px;margin-bottom:12px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;
+  }
+  .item-value .val{
+    flex:1;min-width:0;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13.5px;word-break:break-all;font-weight:600;
+    color:var(--text);
+  }
+  .item-value .copy{
+    flex:0 0 auto;background:#fff;border:1px solid var(--line-strong);
+    color:var(--muted);padding:6px 10px;border-radius:6px;
+    font-size:11px;font-weight:700;cursor:pointer;transition:.15s;
+    text-transform:uppercase;letter-spacing:.5px;
+  }
+  .item-value .copy:hover{color:var(--blue);border-color:var(--blue)}
+  .item-value .copy.copied{color:var(--green);border-color:var(--green);background:var(--green-light)}
+
+  .verified-tag{
+    display:inline-flex;align-items:center;gap:4px;
+    font-size:10.5px;font-weight:800;padding:3px 7px;
+    border-radius:5px;letter-spacing:.3px;text-transform:uppercase;
+  }
+  .verified-tag.ok{background:var(--green-light);color:#166534;border:1px solid #86efac}
+  .verified-tag.warn{background:var(--orange-light);color:#9a3412;border:1px solid #fed7aa}
+
+  .item-action{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;padding:12px;border-radius:10px;
+    font-size:14px;font-weight:700;text-decoration:none;
+    transition:.15s;border:0;cursor:pointer;
+  }
+  .item-action.wa{background:var(--green);color:#fff}
+  .item-action.wa:hover{background:#15803d}
+  .item-action.email{background:var(--blue);color:#fff}
+  .item-action.email:hover{background:var(--blue-dark)}
+
+  /* empty */
+  .empty{
+    display:none;text-align:center;padding:48px 20px;
+    background:#fff;border:1px solid var(--line);
+    border-radius:16px;margin-top:16px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04);
+  }
+  .empty.on{display:block}
+  .empty .ic{font-size:40px;margin-bottom:12px;opacity:.6}
+  .empty h3{font-size:16px;font-weight:700;margin-bottom:6px}
+  .empty p{font-size:13.5px;color:var(--muted);line-height:1.5}
+
+  /* toast */
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+    background:var(--text);color:#fff;
+    padding:12px 20px;border-radius:99px;font-size:13.5px;font-weight:600;
+    z-index:100;transition:transform .3s cubic-bezier(.2,.8,.3,1);
+    box-shadow:0 10px 30px rgba(15,23,42,.25);
+    display:flex;align-items:center;gap:8px;
+    max-width:calc(100% - 40px);
+  }
+  .toast.on{transform:translateX(-50%) translateY(0)}
+  .toast .ic{flex:0 0 auto}
+  .toast.ok .ic{color:#4ade80}
+  .toast.err .ic{color:#f87171}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 19l-7-7 7-7"/>
+    </svg>
+    Back
+  </a>
+  <div class="brand">
+    <div class="mark">T</div>
+    Lead Finder
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>Search</h2>
+
+    <div class="field">
+      <label for="niche">What kind of business?</label>
+      <input type="text" id="niche" placeholder="restaurant, hotel, salon, school..." autocomplete="off" spellcheck="false">
+    </div>
+
+    <div class="field">
+      <label for="city">City</label>
+      <input type="text" id="city" placeholder="Start typing a city..." autocomplete="off" spellcheck="false">
+      <div class="suggestions" id="suggCity"></div>
+    </div>
+
+    <div class="field">
+      <label for="country">Country</label>
+      <select id="country">
+        <option value="Nigeria" selected>🇳🇬 Nigeria</option>
+        <option value="Ghana">🇬🇭 Ghana</option>
+        <option value="Kenya">🇰🇪 Kenya</option>
+        <option value="South Africa">🇿🇦 South Africa</option>
+        <option value="United Kingdom">🇬🇧 United Kingdom</option>
+        <option value="United States">🇺🇸 United States</option>
+        <option value="Canada">🇨🇦 Canada</option>
+        <option value="India">🇮🇳 India</option>
+        <option value="United Arab Emirates">🇦🇪 UAE</option>
+        <option value="Egypt">🇪🇬 Egypt</option>
+        <option value="Rwanda">🇷🇼 Rwanda</option>
+        <option value="Tanzania">🇹🇿 Tanzania</option>
+        <option value="Uganda">🇺🇬 Uganda</option>
+      </select>
+    </div>
+
+    <label>What to find</label>
+    <div class="mode-group">
+      <div class="mode active" data-mode="email">
+        <span class="ic">✉️</span>
+        Emails
+      </div>
+      <div class="mode" data-mode="wa">
+        <span class="ic">💬</span>
+        WhatsApp
+      </div>
+    </div>
+
+    <div class="quick-chips" id="quickChips"></div>
+
+    <button class="btn-search" id="btnSearch">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <path d="M21 21l-4.35-4.35"/>
+      </svg>
+      Find leads
+    </button>
+
+    <div class="status" id="status"></div>
+
+    <div class="recent" id="recentBox" style="display:none">
+      <div class="recent-title">
+        Recent searches
+        <button id="btnClearRecent">Clear</button>
+      </div>
+      <div class="recent-list" id="recentList"></div>
+    </div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="bar row"></div>
+    <div class="bar row"></div>
+    <div class="bar row"></div>
+  </div>
+
+  <div class="results" id="results">
+    <div class="count-card">
+      <div class="num" id="countNum">0</div>
+      <div class="lbl" id="countLbl">emails found</div>
+      <div class="sub" id="countSub"></div>
+    </div>
+
+    <div class="actions-bar">
+      <button id="btnCsv">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        CSV
+      </button>
+      <button id="btnMailer" class="primary">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        Add to Mailer
+      </button>
+      <button id="btnNewSearch" class="full">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        New search
+      </button>
+    </div>
+
+    <div class="list" id="list"></div>
+  </div>
+
+  <div class="empty" id="empty">
+    <div class="ic">🔍</div>
+    <h3 id="emptyTitle">No results found</h3>
+    <p id="emptyText">Try a different business type or a nearby city.</p>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">
+  <span class="ic" id="toastIc">✓</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var API = "/api/search";
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = "email";
+  var leads = [];
+  var filtered = [];
+
+  // ============================================================
+  //  CITY DATA
+  // ============================================================
+  var CITIES = {
+    "Nigeria": ["Lagos","Ikeja","Lekki","Ikoyi","Victoria Island","Yaba","Surulere","Ajah","Maryland","Gbagada","Ikorodu","Badagry","Epe","Abuja","Garki","Wuse","Maitama","Asokoro","Gwarinpa","Kubwa","Kano","Kaduna","Zaria","Jos","Port Harcourt","Aba","Uyo","Calabar","Benin City","Warri","Asaba","Onitsha","Awka","Enugu","Nsukka","Owerri","Abeokuta","Ijebu Ode","Sagamu","Sokoto","Katsina","Maiduguri","Yola","Bauchi","Gombe","Makurdi","Lokoja","Ilorin","Osogbo","Ado Ekiti","Akure","Ondo","Oyo","Ibadan","Ife","Bida","Minna","Keffi","Lafia","Jalingo","Damaturu"],
+    "Ghana": ["Accra","Kumasi","Tamale","Takoradi","Cape Coast","Tema","Sunyani","Ho","Koforidua","Wa","Bolgatanga","Techiman","Obuasi","Ashaiman","Madina","Teshie","Nungua","Dunkwa","Elmina","Navrongo","Bawku","Hohoe","Akosombo","Keta"],
+    "Kenya": ["Nairobi","Mombasa","Kisumu","Nakuru","Eldoret","Thika","Malindi","Kitale","Nyeri","Meru","Machakos","Naivasha","Kakamega","Lamu","Kericho","Embu","Garissa","Isiolo","Nanyuki","Voi","Bungoma","Busia","Homa Bay"],
+    "South Africa": ["Johannesburg","Cape Town","Durban","Pretoria","Port Elizabeth","Bloemfontein","East London","Polokwane","Nelspruit","Kimberley","Pietermaritzburg","Soweto","Sandton","Centurion","Stellenbosch","Rustenburg","Klerksdorp","George","Knysna","Hermanus"],
+    "United Kingdom": ["London","Manchester","Birmingham","Liverpool","Leeds","Sheffield","Bristol","Newcastle","Nottingham","Leicester","Coventry","Bradford","Cardiff","Swansea","Edinburgh","Glasgow","Aberdeen","Dundee","Belfast","Oxford","Cambridge","Brighton","Reading","Southampton","Portsmouth","Plymouth","Exeter","York"],
+    "United States": ["New York","Los Angeles","Chicago","Houston","Phoenix","Philadelphia","San Antonio","San Diego","Dallas","San Jose","Austin","Jacksonville","Fort Worth","Columbus","Charlotte","Indianapolis","Seattle","Denver","Boston","Nashville","Portland","Las Vegas","Detroit","Atlanta","Miami","Minneapolis","Tampa","New Orleans"],
+    "Canada": ["Toronto","Vancouver","Montreal","Calgary","Ottawa","Edmonton","Quebec City","Winnipeg","Hamilton","Kitchener","London","Victoria","Halifax","Oshawa","Windsor","Saskatoon","Regina","St. John's"],
+    "India": ["Mumbai","Delhi","Bangalore","Hyderabad","Ahmedabad","Chennai","Kolkata","Surat","Pune","Jaipur","Lucknow","Kanpur","Nagpur","Indore","Thane","Bhopal","Visakhapatnam","Patna","Vadodara","Ghaziabad","Ludhiana","Agra","Nashik","Faridabad"],
+    "United Arab Emirates": ["Dubai","Abu Dhabi","Sharjah","Ajman","Ras Al Khaimah","Fujairah","Umm Al Quwain","Al Ain"],
+    "Egypt": ["Cairo","Alexandria","Giza","Shubra El Kheima","Port Said","Suez","Luxor","Mansoura","Tanta","Asyut","Ismailia","Faiyum","Zagazig","Aswan"],
+    "Rwanda": ["Kigali","Butare","Gitarama","Ruhengeri","Gisenyi","Byumba","Cyangugu","Kibuye"],
+    "Tanzania": ["Dar es Salaam","Dodoma","Mwanza","Arusha","Mbeya","Morogoro","Tanga","Kahama","Tabora","Zanzibar City"],
+    "Uganda": ["Kampala","Gulu","Lira","Mbarara","Jinja","Mbale","Entebbe","Arua","Fort Portal","Soroti"]
+  };
+
+  var NICHE_SUGGESTIONS = [
+    "restaurant","cafe","hotel","bar","bakery","salon","barber","spa","gym",
+    "pharmacy","hospital","clinic","dentist","school","university","church",
+    "mosque","supermarket","bank","car dealer","mechanic","real estate","lawyer",
+    "laundry","courier","travel agency","photographer","farm","office"
+  ];
+
+  // ============================================================
+  //  HELPERS
+  // ============================================================
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function setStatus(msg, kind) {
+    if (!msg) { $("status").className = "status"; $("status").textContent = ""; return; }
+    $("status").textContent = msg;
+    $("status").className = "status on " + (kind || "info");
+  }
+
+  var toastTimer = null;
+  function toast(msg, kind) {
+    $("toastMsg").textContent = msg;
+    $("toastIc").textContent = kind === "err" ? "!" : "✓";
+    $("toast").className = "toast on " + (kind || "ok");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      $("toast").className = "toast " + (kind || "ok");
+    }, 2400);
+  }
+
+  // ============================================================
+  //  CITY AUTOCOMPLETE
+  // ============================================================
+  var activeSuggIdx = -1;
+
+  function showCitySuggestions(input) {
+    var q = input.toLowerCase().trim();
+    var country = $("country").value;
+    var pool = CITIES[country] || [];
+    var box = $("suggCity");
+
+    if (!q) { box.className = "suggestions"; box.innerHTML = ""; activeSuggIdx = -1; return; }
+
+    var matches = pool.filter(function (c) {
+      return c.toLowerCase().indexOf(q) !== -1;
+    }).slice(0, 8);
+
+    if (!matches.length) { box.className = "suggestions"; box.innerHTML = ""; activeSuggIdx = -1; return; }
+
+    box.innerHTML = matches.map(function (c, i) {
+      var name = c.toLowerCase();
+      var idx = name.indexOf(q);
+      var hl;
+      if (idx === -1) { hl = esc(c); }
+      else {
+        hl = esc(c.substring(0, idx)) +
+             "<mark>" + esc(c.substring(idx, idx + q.length)) + "</mark>" +
+             esc(c.substring(idx + q.length));
+      }
+      return '<div class="sugg' + (i === activeSuggIdx ? ' active' : '') + '" data-city="' + esc(c) + '">' +
+        '<span class="city-name">' + hl + '</span>' +
+        '<span class="city-region">' + esc(country) + '</span>' +
+      '</div>';
+    }).join("");
+
+    box.className = "suggestions on";
+    box.querySelectorAll(".sugg").forEach(function (el) {
+      el.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        $("city").value = el.getAttribute("data-city");
+        box.className = "suggestions";
+      });
+    });
+  }
+
+  $("city").addEventListener("input", function () {
+    activeSuggIdx = -1;
+    showCitySuggestions(this.value);
+  });
+
+  $("city").addEventListener("focus", function () {
+    if (this.value) showCitySuggestions(this.value);
+  });
+
+  $("city").addEventListener("blur", function () {
+    setTimeout(function () { $("suggCity").className = "suggestions"; }, 150);
+  });
+
+  $("city").addEventListener("keydown", function (e) {
+    var box = $("suggCity");
+    var items = box.querySelectorAll(".sugg");
+    if (!items.length || box.className.indexOf("on") === -1) {
+      if (e.key === "Enter") { e.preventDefault(); search(); }
+      return;
+    }
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      activeSuggIdx = Math.min(activeSuggIdx + 1, items.length - 1);
+      showCitySuggestions(this.value);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      activeSuggIdx = Math.max(activeSuggIdx - 1, 0);
+      showCitySuggestions(this.value);
+    } else if (e.key === "Enter" && activeSuggIdx >= 0) {
+      e.preventDefault();
+      $("city").value = items[activeSuggIdx].getAttribute("data-city");
+      box.className = "suggestions";
+      activeSuggIdx = -1;
+    } else if (e.key === "Escape") {
+      box.className = "suggestions";
+    }
+  });
+
+  $("country").addEventListener("change", function () {
+    if ($("city").value) showCitySuggestions($("city").value);
+  });
+
+  // ============================================================
+  //  QUICK CHIPS
+  // ============================================================
+  function renderQuickChips() {
+    var box = $("quickChips");
+    var picks = ["restaurant","hotel","salon","pharmacy","school","gym"];
+    box.innerHTML = picks.map(function (p) {
+      return '<button type="button" class="chip" data-niche="' + p + '">' + p + '</button>';
+    }).join("");
+    box.querySelectorAll(".chip").forEach(function (el) {
+      el.addEventListener("click", function () {
+        $("niche").value = el.getAttribute("data-niche");
+        $("niche").focus();
+      });
+    });
+  }
+
+  // ============================================================
+  //  RECENT SEARCHES
+  // ============================================================
+  var RECENT_KEY = "toolme.recent.v1";
+  var recent = [];
+
+  function loadRecent() {
+    try { recent = JSON.parse(localStorage.getItem(RECENT_KEY) || "[]"); } catch (e) { recent = []; }
+    renderRecent();
+  }
+
+  function saveRecent() {
+    try { localStorage.setItem(RECENT_KEY, JSON.stringify(recent.slice(0, 6))); } catch (e) {}
+  }
+
+  function addRecent(niche, city, country) {
+    recent = recent.filter(function (r) { return !(r.niche === niche && r.city === city && r.country === country); });
+    recent.unshift({ niche: niche, city: city, country: country });
+    saveRecent();
+    renderRecent();
+  }
+
+  function renderRecent() {
+    if (!recent.length) { $("recentBox").style.display = "none"; return; }
+    $("recentBox").style.display = "block";
+    var list = $("recentList");
+    list.innerHTML = recent.map(function (r) {
+      return '<div class="recent-item" data-niche="' + esc(r.niche) + '" data-city="' + esc(r.city) + '" data-country="' + esc(r.country) + '">' +
+        '<span class="ic">🔍</span>' +
+        '<div class="txt"><b>' + esc(r.niche) + '</b><span>' + esc(r.city) + ', ' + esc(r.country) + '</span></div>' +
+      '</div>';
+    }).join("");
+
+    list.querySelectorAll(".recent-item").forEach(function (el) {
+      el.addEventListener("click", function () {
+        $("niche").value = el.getAttribute("data-niche");
+        $("city").value = el.getAttribute("data-city");
+        $("country").value = el.getAttribute("data-country");
+        search();
+      });
+    });
+  }
+
+  $("btnClearRecent").addEventListener("click", function () {
+    recent = [];
+    saveRecent();
+    renderRecent();
+  });
+
+  // ============================================================
+  //  MODE
+  // ============================================================
+  document.querySelectorAll(".mode").forEach(function (el) {
+    el.addEventListener("click", function () {
+      document.querySelectorAll(".mode").forEach(function (m) { m.classList.remove("active"); });
+      el.classList.add("active");
+      mode = el.getAttribute("data-mode");
+      if (filtered.length || leads.length) renderFiltered();
+    });
+  });
+
+  // ============================================================
+  //  COPY
+  // ============================================================
+  function copyText(text, btn) {
+    var done = function () {
+      btn.textContent = "Copied";
+      btn.className = "copy copied";
+      toast("Copied: " + text, "ok");
+      setTimeout(function () {
+        btn.textContent = "Copy";
+        btn.className = "copy";
+      }, 1800);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function () {
+        fallbackCopy(text);
+        done();
+      });
+    } else {
+      fallbackCopy(text);
+      done();
+    }
+  }
+
+  function fallbackCopy(text) {
+    var t = document.createElement("textarea");
+    t.value = text;
+    t.style.position = "fixed";
+    t.style.opacity = "0";
+    document.body.appendChild(t);
+    t.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(t);
+  }
+
+  // ============================================================
+  //  FILTER & RENDER
+  // ============================================================
+  function waLink(number, name) {
+    var msg = "Hi " + (name || "there") + ", I came across your business and wanted to reach out — is this a good time for a quick chat?";
+    return "https://wa.me/" + number + "?text=" + encodeURIComponent(msg);
+  }
+
+  function filterLeads() {
+    if (mode === "email") return leads.filter(function (l) { return l.email; });
+    return leads.filter(function (l) { return l.whatsappNumber; });
+  }
+
+  function renderFiltered() {
+    filtered = filterLeads();
+    var list = $("list");
+    list.innerHTML = "";
+
+    var totalEmail = leads.filter(function (l) { return l.email; }).length;
+    var totalWa = leads.filter(function (l) { return l.whatsappNumber; }).length;
+
+    $("countNum").textContent = filtered.length;
+    $("countLbl").textContent = (mode === "email" ? "email" : "WhatsApp number") +
+                                (filtered.length === 1 ? "" : "s") + " found";
+
+    var other = mode === "email" ? totalWa : totalEmail;
+    var otherName = mode === "email" ? "WhatsApp numbers" : "emails";
+
+    if (!filtered.length && other > 0) {
+      $("countSub").textContent = other + " " + otherName + " available — switch mode";
+    } else if (filtered.length) {
+      $("countSub").textContent = "Tap the button to contact them";
+    } else {
+      $("countSub").textContent = "";
+    }
+
+    $("btnMailer").style.display = mode === "email" ? "" : "none";
+
+    if (!filtered.length) {
+      $("results").className = "results on";
+      $("empty").className = "empty on";
+      $("emptyTitle").textContent = "No " + (mode === "email" ? "emails" : "WhatsApp numbers") + " found";
+      $("emptyText").textContent = other > 0
+        ? "But there are " + other + " " + otherName + ". Tap the other mode above."
+        : "Try a different business type or a nearby city.";
+      return;
+    }
+
+    $("empty").className = "empty";
+    $("results").className = "results on";
+
+    filtered.forEach(function (l, i) {
+      var div = document.createElement("div");
+      div.className = "item";
+
+      var value = mode === "email" ? l.email : "+" + l.whatsappNumber;
+      var badge = "";
+      if (mode === "email" && l.emailVerified) {
+        badge = '<span class="verified-tag ok">✓ Verified</span>';
+      } else if (mode === "email") {
+        badge = '<span class="verified-tag warn">Unverified</span>';
+      }
+
+      var actionHtml = mode === "email"
+        ? '<a class="item-action email" href="mailto:' + esc(l.email) + '">✉️ Send email</a>'
+        : '<a class="item-action wa" href="' + waLink(l.whatsappNumber, l.name) + '" target="_blank" rel="noopener">💬 Chat on WhatsApp</a>';
+
+      div.innerHTML =
+        '<div class="item-head">' +
+          '<div class="item-idx">' + (i + 1) + '</div>' +
+          '<div class="item-body">' +
+            '<div class="item-name">' + esc(l.name || "Unknown business") + '</div>' +
+            (l.address ? '<div class="item-addr">' + esc(l.address) + '</div>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div class="item-value">' +
+          '<span class="val">' + esc(value) + '</span>' +
+          badge +
+          '<button class="copy" type="button" data-copy="' + esc(value) + '">Copy</button>' +
+        '</div>' +
+        actionHtml;
+
+      div.querySelector(".copy").addEventListener("click", function () {
+        copyText(this.getAttribute("data-copy"), this);
+      });
+
+      list.appendChild(div);
+    });
+  }
+
+  // ============================================================
+  //  SEARCH
+  // ============================================================
+  async function search() {
+    var niche = $("niche").value.trim();
+    var city = $("city").value.trim();
+    var country = $("country").value;
+
+    if (!niche) { setStatus("Enter a business type first.", "err"); $("niche").focus(); return; }
+    if (!city) { setStatus("Enter a city first.", "err"); $("city").focus(); return; }
+
+    $("btnSearch").disabled = true;
+    $("btnSearch").innerHTML = "Searching...";
+    setStatus("");
+    $("results").className = "results";
+    $("empty").className = "empty";
+    $("loading").className = "loading on";
+
+    try {
+      var res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ niche: niche, city: city, country: country })
+      });
+
+      var text = await res.text();
+      var data;
+      try { data = JSON.parse(text); } catch (e) { data = {}; }
+
+      if (!res.ok) {
+        if (res.status === 500) throw new Error("Server error. Check your Geoapify key on Vercel.");
+        if (data.error) throw new Error(data.error);
+        throw new Error("Error " + res.status + ". Try again.");
+      }
+
+      leads = data.results || [];
+      filtered = filterLeads();
+      addRecent(niche, city, country);
+      $("loading").className = "loading";
+
+      if (!filtered.length) {
+        renderFiltered();
+        if (!leads.length) setStatus("Search ran but no businesses had contact info.", "info");
+      } else {
+        setStatus("");
+        renderFiltered();
+        toast("Found " + filtered.length + " " + (mode === "email" ? "emails" : "numbers"), "ok");
+      }
+    } catch (err) {
+      $("loading").className = "loading";
+      setStatus(err.message || "Something went wrong.", "err");
+      toast("Search failed", "err");
+    } finally {
+      $("btnSearch").disabled = false;
+      $("btnSearch").innerHTML =
+        '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' +
+        '<circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Find leads';
+    }
+  }
+
+  // ============================================================
+  //  EXPORT & MAILER
+  // ============================================================
+  function downloadCsv() {
+    if (!filtered.length) { toast("No results to export", "err"); return; }
+    var headers = mode === "email"
+      ? ["Business","Email","Verified","Address"]
+      : ["Business","WhatsApp","Address"];
+
+    var rows = [headers];
+    filtered.forEach(function (l) {
+      if (mode === "email") {
+        rows.push([l.name || "", l.email || "", l.emailVerified ? "yes" : "", l.address || ""]);
+      } else {
+        rows.push([l.name || "", "+" + (l.whatsappNumber || ""), l.address || ""]);
+      }
+    });
+
+    var csv = rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c == null ? "" : c);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(",");
+    }).join("\n");
+
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = (mode === "email" ? "emails" : "whatsapp") + "-" + Date.now() + ".csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Downloaded CSV", "ok");
+  }
+
+  function sendToMailer() {
+    if (!filtered.length) { toast("No emails to add", "err"); return; }
+    var KEY = "bulkmailer.v2";
+    var existing;
+    try { existing = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { existing = {}; }
+    var people = (existing.people || []).slice();
+    var seen = {};
+    people.forEach(function (p) { seen[p.email] = true; });
+
+    var added = 0;
+    filtered.forEach(function (l) {
+      if (!l.email || seen[l.email]) return;
+      people.push({ email: l.email, name: l.name || "" });
+      seen[l.email] = true;
+      added++;
+    });
+
+    existing.people = people;
+    try { localStorage.setItem(KEY, JSON.stringify(existing)); } catch (e) {}
+
+    toast("Added " + added + " to mailer", "ok");
+  }
+
+  // ============================================================
+  //  EVENTS
+  // ============================================================
+  $("btnSearch").addEventListener("click", search);
+  $("btnCsv").addEventListener("click", downloadCsv);
+  $("btnMailer").addEventListener("click", sendToMailer);
+  $("btnNewSearch").addEventListener("click", function () {
+    $("results").className = "results";
+    $("empty").className = "empty";
+    $("list").innerHTML = "";
+    setStatus("");
+    $("niche").focus();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  $("niche").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); $("city").focus(); }
+  });
+
+  // ============================================================
+  //  BOOT
+  // ============================================================
+  renderQuickChips();
+  loadRecent();
+
+})();
+</script>
+</body>
+</html>

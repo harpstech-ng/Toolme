@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhatsApp Bot — Toolmey</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f6f8fb;--card:#ffffff;--card-2:#f9fafb;--line:#e5e7eb;--line-strong:#d1d5db;
+    --text:#0f172a;--muted:#64748b;--dim:#94a3b8;
+    --blue:#2563eb;--blue-dark:#1d4ed8;--blue-light:#eff6ff;
+    --green:#16a34a;--green-dark:#15803d;--green-light:#f0fdf4;
+    --purple:#7c3aed;--purple-light:#f5f3ff;
+    --orange:#ea580c;--orange-light:#fff7ed;
+    --red:#dc2626;--red-light:#fef2f2;
+    --yellow:#ca8a04;--yellow-light:#fefce8;
+    --teal:#0d9488;--teal-light:#f0fdfa;
+  }
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
+    padding-bottom:80px;
+    background-image:radial-gradient(circle at 100% 0%, rgba(37,99,235,.06) 0%, transparent 40%);
+    background-attachment:fixed}
+
+  .navbar{background:rgba(255,255,255,.9);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    padding:12px 16px;position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .back{display:flex;align-items:center;gap:6px;text-decoration:none;
+    color:var(--muted);font-size:13.5px;font-weight:600;padding:6px 10px;
+    border-radius:8px}
+  .back:hover{background:var(--card-2);color:var(--text)}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;
+    font-size:14.5px;letter-spacing:-.3px;color:var(--text)}
+  .brand .mark{width:24px;height:24px;border-radius:7px;
+    background:linear-gradient(135deg,var(--purple) 0%,var(--blue) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:900;color:#fff;
+    box-shadow:0 2px 8px rgba(124,58,237,.3)}
+
+  .wrap{max-width:680px;margin:0 auto;padding:16px 16px 100px}
+
+  /* TABS */
+  .tabs-nav{display:flex;gap:4px;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:4px;margin-bottom:16px;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs-nav::-webkit-scrollbar{display:none}
+  .tab-btn{flex:0 0 auto;padding:10px 14px;font-size:13px;font-weight:700;
+    color:var(--muted);background:transparent;border:0;border-radius:9px;
+    cursor:pointer;white-space:nowrap;transition:.15s;
+    -webkit-tap-highlight-color:transparent;display:flex;align-items:center;gap:6px}
+  .tab-btn:hover{color:var(--text);background:var(--card-2)}
+  .tab-btn.active{background:var(--blue);color:#fff;
+    box-shadow:0 2px 8px rgba(37,99,235,.25)}
+  .tab-btn .ic{font-size:14px}
+
+  .tab-panel{display:none}
+  .tab-panel.active{display:block;animation:fadeIn .2s}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+  /* CARDS */
+  .card{background:#fff;border:1px solid var(--line);
+    border-radius:16px;padding:18px;margin-bottom:14px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .card h2{font-size:11px;font-weight:700;letter-spacing:1.2px;
+    text-transform:uppercase;color:var(--muted);margin-bottom:14px;
+    display:flex;align-items:center;justify-content:space-between}
+  .card h2 .badge{font-size:10px;padding:2px 8px;border-radius:99px;
+    background:var(--blue-light);color:var(--blue);font-weight:800;
+    letter-spacing:.5px;text-transform:none}
+
+  label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+  input,textarea,select{width:100%;padding:12px 14px;
+    border:1.5px solid var(--line-strong);border-radius:10px;
+    font:inherit;font-size:15px;background:#fff;color:var(--text);
+    outline:none;transition:border-color .15s,box-shadow .15s;
+    -webkit-appearance:none;appearance:none}
+  input:focus,textarea:focus,select:focus{border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+  input::placeholder,textarea::placeholder{color:var(--dim)}
+  textarea{resize:vertical;line-height:1.6;min-height:80px;font-family:inherit}
+  .mb{margin-bottom:12px}
+  .mb:last-child{margin-bottom:0}
+
+  button{font:inherit;border:0;cursor:pointer;
+    transition:background .15s,transform .1s,opacity .15s;
+    -webkit-tap-highlight-color:transparent}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  button:active:not(:disabled){transform:scale(.98)}
+
+  .btn-primary{width:100%;background:var(--blue);color:#fff;padding:14px;
+    font-size:14.5px;font-weight:700;border-radius:11px;
+    box-shadow:0 4px 14px rgba(37,99,235,.25);
+    display:flex;align-items:center;justify-content:center;gap:8px}
+  .btn-primary:hover:not(:disabled){background:var(--blue-dark)}
+  .btn-green{background:var(--green);color:#fff}
+  .btn-green:hover:not(:disabled){background:var(--green-dark)}
+  .btn-ghost{background:#fff;color:var(--text);border:1.5px solid var(--line-strong);
+    padding:12px 18px;font-size:14px;font-weight:700;border-radius:10px;
+    display:inline-flex;align-items:center;gap:6px}
+  .btn-ghost:hover:not(:disabled){background:var(--card-2);border-color:var(--muted)}
+  .btn-danger{background:var(--red-light);color:#991b1b;border:1px solid #fecaca;
+    padding:10px 16px;font-size:13px;font-weight:700;border-radius:9px}
+  .btn-danger:hover:not(:disabled){background:#fee2e2}
+  .btn-sm{padding:8px 14px;font-size:12.5px;border-radius:8px;font-weight:700}
+
+  /* STATUS */
+  .status-card{background:var(--green-light);border:1px solid #86efac;
+    border-radius:14px;padding:16px;margin-bottom:14px;
+    display:flex;align-items:center;gap:12px}
+  .status-card.off{background:var(--red-light);border-color:#fecaca}
+  .status-card.wait{background:var(--orange-light);border-color:#fed7aa}
+  .status-dot{width:10px;height:10px;border-radius:50%;background:var(--green);
+    box-shadow:0 0 10px var(--green);flex:0 0 auto;
+    animation:pulse 2s ease-in-out infinite}
+  .status-card.off .status-dot{background:var(--red);box-shadow:0 0 10px var(--red)}
+  .status-card.wait .status-dot{background:var(--orange);box-shadow:0 0 10px var(--orange)}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  .status-info{flex:1;min-width:0}
+  .status-info b{display:block;font-size:14px;margin-bottom:2px}
+  .status-info span{font-size:12.5px;color:var(--muted)}
+
+  /* STATS GRID */
+  .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+    margin-bottom:14px}
+  .stat-box{background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .stat-box .n{font-size:26px;font-weight:800;line-height:1;
+    letter-spacing:-1px;margin-bottom:6px}
+  .stat-box .l{font-size:11px;color:var(--muted);font-weight:700;
+    text-transform:uppercase;letter-spacing:.5px}
+  .stat-box.blue .n{color:var(--blue)}
+  .stat-box.green .n{color:var(--green)}
+  .stat-box.purple .n{color:var(--purple)}
+  .stat-box.orange .n{color:var(--orange)}
+
+  /* ACTIVITY CHART */
+  .chart{display:flex;align-items:flex-end;gap:6px;height:80px;
+    padding:8px 0;margin-bottom:14px}
+  .chart-bar{flex:1;background:linear-gradient(180deg,var(--blue) 0%,#93c5fd 100%);
+    border-radius:4px 4px 0 0;min-height:6px;position:relative;
+    transition:background .15s}
+  .chart-bar:hover{background:var(--blue-dark)}
+  .chart-labels{display:flex;gap:6px;font-size:10px;color:var(--dim);
+    text-align:center;font-weight:700}
+  .chart-labels span{flex:1}
+
+  /* INBOX */
+  .inbox-item{display:flex;gap:12px;padding:14px;
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin-bottom:8px;cursor:pointer;transition:.15s;
+    box-shadow:0 1px 2px rgba(15,23,42,.03)}
+  .inbox-item:hover{border-color:var(--line-strong);
+    box-shadow:0 2px 8px rgba(15,23,42,.06)}
+  .inbox-avatar{width:40px;height:40px;border-radius:50%;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--green),#4ade80);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:800;font-size:15px}
+  .inbox-body{flex:1;min-width:0}
+  .inbox-head{display:flex;justify-content:space-between;align-items:baseline;
+    margin-bottom:3px;gap:8px}
+  .inbox-head b{font-size:14px;font-weight:700;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .inbox-head .time{font-size:11px;color:var(--dim);flex:0 0 auto;font-weight:600}
+  .inbox-msg{font-size:13px;color:var(--muted);line-height:1.4;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .unread-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);
+    flex:0 0 auto;margin-top:6px}
+
+  /* RULES */
+  .rule{background:var(--card-2);border:1px solid var(--line);
+    border-radius:12px;padding:14px;margin-bottom:10px}
+  .rule-head{display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:10px;gap:10px}
+  .rule-head .tag{font-size:10px;font-weight:800;padding:2px 8px;
+    background:var(--blue-light);color:var(--blue);border-radius:5px;
+    letter-spacing:.5px;text-transform:uppercase}
+  .rule-del{background:transparent;border:0;color:var(--red);
+    font-size:18px;font-weight:800;padding:0 6px;cursor:pointer;
+    line-height:1}
+  .rule-del:hover{background:var(--red-light);border-radius:6px}
+  .rule-inputs{display:flex;flex-direction:column;gap:8px}
+  .rule-inputs input{font-size:14px;padding:10px 12px}
+  .rule-inputs .response-row{display:flex;gap:6px;align-items:stretch}
+  .rule-inputs .response-row input{flex:1}
+  .rule-inputs .response-row button{background:var(--card);
+    border:1px solid var(--line);border-radius:8px;padding:0 12px;
+    font-size:14px;color:var(--muted);font-weight:700}
+  .rule-inputs .response-row button:hover{color:var(--red);border-color:#fecaca}
+
+  .add-rule{background:var(--blue-light);border:1.5px dashed #93c5fd;
+    color:var(--blue);padding:12px;width:100%;font-size:13.5px;
+    font-weight:700;border-radius:10px;display:flex;
+    align-items:center;justify-content:center;gap:6px}
+  .add-rule:hover:not(:disabled){background:#dbeafe}
+
+  /* TOGGLES */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;
+    padding:12px 0;border-bottom:1px solid var(--line);gap:12px}
+  .toggle-row:last-child{border-bottom:0}
+  .toggle-info{flex:1;padding-right:12px}
+  .toggle-info b{display:block;font-size:14px;margin-bottom:2px}
+  .toggle-info span{font-size:12.5px;color:var(--muted);line-height:1.4}
+  .switch{position:relative;width:44px;height:26px;flex:0 0 auto}
+  .switch input{opacity:0;width:0;height:0;position:absolute}
+  .slider{position:absolute;top:0;left:0;right:0;bottom:0;
+    background:#cbd5e1;border-radius:99px;cursor:pointer;
+    transition:.2s;-webkit-transition:.2s}
+  .slider:before{content:"";position:absolute;height:20px;width:20px;
+    left:3px;top:3px;background:#fff;border-radius:50%;
+    transition:.2s;-webkit-transition:.2s;
+    box-shadow:0 1px 3px rgba(0,0,0,.2)}
+  .switch input:checked + .slider{background:var(--green)}
+  .switch input:checked + .slider:before{transform:translateX(18px);
+    -webkit-transform:translateX(18px)}
+
+  .hidden{display:none!important}
+
+  /* MODAL */
+  .modal{position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(15,23,42,.55);z-index:200;display:none;
+    align-items:flex-end;justify-content:center;
+    -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  .modal.on{display:flex}
+  .modal-content{background:#fff;width:100%;max-width:560px;max-height:92vh;
+    border-radius:20px 20px 0 0;overflow:hidden;display:flex;
+    flex-direction:column;box-shadow:0 -10px 40px rgba(15,23,42,.25)}
+  .modal-head{padding:18px 22px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between}
+  .modal-head h3{font-size:16px;font-weight:800}
+  .modal-close{background:transparent;border:0;color:var(--muted);
+    font-size:24px;padding:0;width:32px;height:32px;cursor:pointer;line-height:1}
+  .modal-body{overflow-y:auto;flex:1;padding:20px 22px 24px;
+    -webkit-overflow-scrolling:touch}
+
+  /* METHOD TABS */
+  .method-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+    margin-bottom:20px}
+  .method-tab{padding:14px 12px;border:1.5px solid var(--line-strong);
+    border-radius:12px;background:#fff;text-align:center;
+    cursor:pointer;transition:.15s;font-weight:700;font-size:13.5px;
+    color:var(--muted)}
+  .method-tab .ic{display:block;font-size:22px;margin-bottom:4px}
+  .method-tab.active{border-color:var(--blue);background:var(--blue-light);
+    color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+
+  .pair-code{background:linear-gradient(135deg,var(--blue-light),var(--purple-light));
+    border:1.5px solid #c7d2fe;border-radius:14px;padding:24px;
+    text-align:center;margin-bottom:16px}
+  .pair-code .code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:28px;font-weight:800;letter-spacing:4px;color:var(--blue);
+    margin:10px 0;word-break:break-all;line-height:1.2}
+  .pair-code .label{font-size:12px;color:var(--muted);font-weight:700;
+    text-transform:uppercase;letter-spacing:1px}
+  .pair-code .expiry{font-size:12px;color:var(--orange);font-weight:700;
+    margin-top:8px}
+
+  .qr-box{background:#fff;border:1.5px solid var(--line);border-radius:14px;
+    padding:24px;text-align:center;margin-bottom:16px}
+  .qr-box canvas{max-width:100%;height:auto;display:block;margin:0 auto}
+  .qr-placeholder{width:240px;height:240px;background:var(--card-2);
+    border-radius:12px;margin:0 auto;display:flex;align-items:center;
+    justify-content:center;color:var(--dim);font-size:13px;
+    border:2px dashed var(--line-strong);text-align:center;padding:20px}
+
+  .steps{background:var(--card-2);border-radius:12px;padding:16px;margin-top:8px}
+  .steps h4{font-size:12px;font-weight:800;color:var(--muted);
+    text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .step{display:flex;gap:12px;padding:8px 0;font-size:13.5px;
+    line-height:1.5;color:var(--text)}
+  .step .n{flex:0 0 auto;width:22px;height:22px;border-radius:50%;
+    background:var(--blue);color:#fff;font-size:11px;font-weight:800;
+    display:flex;align-items:center;justify-content:center}
+  .step b{font-weight:700;color:var(--text)}
+
+  /* BROADCAST */
+  .broadcast-targets{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .target-chip{background:var(--card-2);border:1px solid var(--line);
+    border-radius:99px;padding:6px 12px;font-size:12px;font-weight:600;
+    color:var(--muted);cursor:pointer;transition:.15s}
+  .target-chip:hover{border-color:var(--blue);color:var(--blue)}
+  .target-chip.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  .broadcast-preview{background:#e5ddd5;border-radius:12px;padding:16px;
+    margin-top:12px;font-size:13px}
+
+  /* LEADS TABLE */
+  .lead-row{display:flex;gap:10px;padding:12px;
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    margin-bottom:6px;align-items:center}
+  .lead-avatar{width:36px;height:36px;border-radius:50%;flex:0 0 auto;
+    background:var(--card-2);display:flex;align-items:center;
+    justify-content:center;font-size:14px;font-weight:800;color:var(--muted)}
+  .lead-info{flex:1;min-width:0}
+  .lead-info b{display:block;font-size:13.5px;font-weight:700;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .lead-info span{font-size:12px;color:var(--muted);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+  .lead-badge{font-size:10px;font-weight:800;padding:3px 8px;
+    border-radius:5px;background:var(--green-light);color:#166534;
+    text-transform:uppercase;letter-spacing:.5px;flex:0 0 auto}
+
+  /* EMPTY */
+  .empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
+  .empty-state .ic{font-size:36px;margin-bottom:12px;opacity:.5}
+  .empty-state h3{font-size:15px;font-weight:700;margin-bottom:6px;
+    color:var(--text)}
+  .empty-state p{font-size:13.5px;line-height:1.5}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:24px;left:50%;
+    -webkit-transform:translateX(-50%) translateY(100px);
+    transform:translateX(-50%) translateY(100px);
+    background:var(--text);color:#fff;padding:12px 20px;
+    border-radius:99px;font-size:13.5px;font-weight:600;z-index:300;
+    -webkit-transition:-webkit-transform .3s cubic-bezier(.2,.8,.3,1);
+    transition:transform .3s cubic-bezier(.2,.8,.3,1);
+    box-shadow:0 10px 30px rgba(15,23,42,.25);display:flex;
+    align-items:center;gap:8px;max-width:calc(100% - 40px)}
+  .toast.on{-webkit-transform:translateX(-50%) translateY(0);
+    transform:translateX(-50%) translateY(0)}
+  .toast .ic{flex:0 0 auto}
+  .toast.ok .ic{color:#4ade80}
+  .toast.err .ic{color:#f87171}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="back">← Back</a>
+  <div class="brand">
+    <div class="mark">W</div>
+    WhatsApp Bot
+  </div>
+  <div style="width:80px"></div>
+</nav>
+
+<div class="wrap">
+
+  <!-- TABS NAV -->
+  <div class="tabs-nav">
+    <button class="tab-btn active" data-tab="dash"><span class="ic">📊</span>Dashboard</button>
+    <button class="tab-btn" data-tab="inbox"><span class="ic">💬</span>Inbox</button>
+    <button class="tab-btn" data-tab="settings"><span class="ic">⚙️</span>Bot</button>
+    <button class="tab-btn" data-tab="broadcast"><span class="ic">📢</span>Broadcast</button>
+    <button class="tab-btn" data-tab="leads"><span class="ic">👥</span>Leads</button>
+    <button class="tab-btn" data-tab="connect"><span class="ic">🔗</span>Connect</button>
+  </div>
+
+  <!-- ============================== DASHBOARD ============================== -->
+  <div class="tab-panel active" id="panel-dash">
+
+    <div class="status-card off" id="statusCard">
+      <div class="status-dot"></div>
+      <div class="status-info">
+        <b id="statusTitle">Not connected</b>
+        <span id="statusSub">Connect your WhatsApp to start the bot</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-box blue">
+        <div class="n" id="statMessages">0</div>
+        <div class="l">Messages today</div>
+      </div>
+      <div class="stat-box green">
+        <div class="n" id="statReplies">0</div>
+        <div class="l">Auto-replies sent</div>
+      </div>
+      <div class="stat-box purple">
+        <div class="n" id="statLeads">0</div>
+        <div class="l">New leads captured</div>
+      </div>
+      <div class="stat-box orange">
+        <div class="n" id="statResponse">0s</div>
+        <div class="l">Avg response time</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Messages this week <span class="badge">Last 7 days</span></h2>
+      <div class="chart" id="chart">
+        <div class="chart-bar" style="height:30%"></div>
+        <div class="chart-bar" style="height:50%"></div>
+        <div class="chart-bar" style="height:25%"></div>
+        <div class="chart-bar" style="height:70%"></div>
+        <div class="chart-bar" style="height:90%"></div>
+        <div class="chart-bar" style="height:60%"></div>
+        <div class="chart-bar" style="height:45%"></div>
+      </div>
+      <div class="chart-labels">
+        <span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span><span>SUN</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Recent activity</h2>
+      <div id="recentActivity">
+        <div class="empty-state">
+          <div class="ic">💬</div>
+          <h3>No messages yet</h3>
+          <p>Once you connect WhatsApp, incoming messages will show up here.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================== INBOX ============================== -->
+  <div class="tab-panel" id="panel-inbox">
+    <div class="card">
+      <h2>Messages <span class="badge" id="inboxCount">0</span></h2>
+      <div id="inboxList">
+        <div class="empty-state">
+          <div class="ic">📭</div>
+          <h3>Inbox is empty</h3>
+          <p>Connect WhatsApp and messages from customers will appear here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================== BOT SETTINGS ============================== -->
+  <div class="tab-panel" id="panel-settings">
+
+    <div class="card">
+      <h2>Greeting message</h2>
+      <textarea id="greeting" placeholder="Hi! Thanks for messaging us. How can we help you today?"></textarea>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.5">
+        Sent automatically to every new customer who messages you.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Away message <span class="badge">Outside hours</span></h2>
+      <textarea id="awayMsg" placeholder="We're closed right now. We'll reply as soon as we open at 9am."></textarea>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.5">
+        Shown when a customer messages outside your business hours.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Auto-reply rules <span class="badge" id="ruleCount">0</span></h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">
+        If a message contains a keyword, the bot picks a random reply from that rule.
+      </p>
+      <div id="rulesList"></div>
+      <button class="add-rule" id="btnAddRule" style="margin-top:6px">
+        <span>+</span> Add a rule
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>Business hours</h2>
+      <div class="mb">
+        <label for="openTime">Opens at</label>
+        <input type="time" id="openTime" value="09:00">
+      </div>
+      <div class="mb">
+        <label for="closeTime">Closes at</label>
+        <input type="time" id="closeTime" value="18:00">
+      </div>
+      <div class="mb">
+        <label for="daysOpen">Open days</label>
+        <select id="daysOpen">
+          <option value="1-6">Monday to Saturday</option>
+          <option value="1-5">Monday to Friday</option>
+          <option value="0-6">Every day</option>
+          <option value="1-7">Monday to Sunday</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Options</h2>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <b>Reply outside work hours</b>
+          <span>Bot works 24/7 even when you're closed</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="opt24">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <b>Forward to human</b>
+          <span>When customer asks to talk to a real person</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="optHuman" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <b>Send typing indicator</b>
+          <span>Show "typing…" before the bot replies</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="optTyping" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <b>Capture leads</b>
+          <span>Auto-save every new contact to Leads tab</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="optLeads" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Handoff</h2>
+      <label for="handoff">WhatsApp number to forward to when a human is needed</label>
+      <input type="text" id="handoff" placeholder="e.g. 2348012345678" inputmode="tel">
+    </div>
+
+    <button class="btn-primary" id="btnSave">
+      <span>💾</span> Save settings
+    </button>
+
+  </div>
+
+  <!-- ============================== BROADCAST ============================== -->
+  <div class="tab-panel" id="panel-broadcast">
+
+    <div class="card">
+      <h2>Send a broadcast</h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">
+        Send one message to many contacts at once. Personalise with <code style="background:var(--card-2);padding:1px 6px;border-radius:4px;font-size:12px">{name}</code> to insert their name.
+      </p>
+
+      <div class="mb">
+        <label>Send to</label>
+        <div class="broadcast-targets">
+          <div class="target-chip active" data-target="all">All contacts</div>
+          <div class="target-chip" data-target="leads">New leads</div>
+          <div class="target-chip" data-target="custom">Custom list</div>
+        </div>
+      </div>
+
+      <div class="mb hidden" id="customListWrap">
+        <label for="customList">Phone numbers (one per line)</label>
+        <textarea id="customList" placeholder="2348012345678&#10;2349087654321" style="min-height:100px;font-family:ui-monospace,monospace;font-size:13px"></textarea>
+      </div>
+
+      <div class="mb">
+        <label for="broadcastMsg">Message</label>
+        <textarea id="broadcastMsg" placeholder="Hi {name}, we have something new for you..."></textarea>
+      </div>
+
+      <div class="mb">
+        <label for="broadcastDelay">Delay between messages (seconds)</label>
+        <input type="number" id="broadcastDelay" value="5" min="3" max="60">
+      </div>
+
+      <button class="btn-primary btn-green" id="btnBroadcast">
+        <span>📢</span> Send broadcast
+      </button>
+
+      <p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">
+        ⚠️ WhatsApp limits how many messages you can send in a day. Start with small batches to protect your number.
+      </p>
+
+      <div class="broadcast-preview" id="broadcastPreview" style="display:none">
+        <div style="background:#fff;padding:8px 12px;border-radius:8px;
+          box-shadow:0 1px 2px rgba(0,0,0,.08);font-size:13.5px;
+          max-width:80%" id="broadcastPreviewBubble">
+          Preview will appear here
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============================== LEADS ============================== -->
+  <div class="tab-panel" id="panel-leads">
+
+    <div class="card">
+      <h2>Captured leads <span class="badge" id="leadCount">0</span></h2>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;line-height:1.5">
+        Every new person who messages you is saved here automatically.
+      </p>
+      <div id="leadList">
+        <div class="empty-state">
+          <div class="ic">👥</div>
+          <h3>No leads yet</h3>
+          <p>When customers message your WhatsApp, they'll be captured here.</p>
+        </div>
+      </div>
+      <button class="btn-ghost" id="btnExportLeads" style="width:100%;justify-content:center;margin-top:12px">
+        <span>📤</span> Export leads to CSV
+      </button>
+    </div>
+
+  </div>
+
+  <!-- ============================== CONNECT ============================== -->
+  <div class="tab-panel" id="panel-connect">
+
+    <div class="card">
+      <h2>Connection status</h2>
+      <div class="status-card off" id="statusCard2">
+        <div class="status-dot"></div>
+        <div class="status-info">
+          <b id="statusTitle2">Not connected</b>
+          <span id="statusSub2">Pair your WhatsApp to activate the bot</span>
+        </div>
+      </div>
+      <button class="btn-primary btn-green" id="btnConnect" style="margin-bottom:10px">
+        <span>🔗</span> Connect WhatsApp
+      </button>
+      <button class="btn-ghost hidden" id="btnDisconnect" style="width:100%;justify-content:center">
+        Disconnect number
+      </button>
+    </div>
+
+    <div class="card">
+      <h2>Why pair a second number?</h2>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.6">
+        When you link a number to the bot, it takes over that WhatsApp account. If you pair your main number, you can't use WhatsApp on your phone the same way.
+      </p>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-top:10px">
+        <b style="color:var(--text)">Recommended:</b> Get a second SIM (₦100-500) or use a virtual number. Run the bot on that number. Keep your main line for personal chats.
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- PAIR MODAL -->
+<div class="modal" id="pairModal">
+  <div class="modal-content">
+    <div class="modal-head">
+      <h3>Connect your WhatsApp</h3>
+      <button class="modal-close" id="btnCloseModal">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="mb">
+        <label for="phone">Your WhatsApp number (with country code, no + or spaces)</label>
+        <input type="text" id="phone" inputmode="tel" placeholder="2348012345678">
+      </div>
+
+      <div class="method-tabs">
+        <div class="method-tab active" data-method="code">
+          <span class="ic">🔢</span>
+          Pairing code
+        </div>
+        <div class="method-tab" data-method="qr">
+          <span class="ic">📱</span>
+          QR code
+        </div>
+      </div>
+
+      <div id="codeMethod">
+        <button class="btn-primary" id="btnGenerateCode" style="margin-bottom:16px">
+          Generate 8-digit code
+        </button>
+
+        <div class="pair-code hidden" id="codeBox">
+          <div class="label">Your pairing code</div>
+          <div class="code" id="codeValue">----</div>
+          <div class="label">Copy this code, then open WhatsApp</div>
+          <div class="expiry" id="codeExpiry">Expires in 5:00</div>
+        </div>
+
+        <div class="steps">
+          <h4>How to connect</h4>
+          <div class="step"><div class="n">1</div><div>Open <b>WhatsApp</b> on the phone with your number</div></div>
+          <div class="step"><div class="n">2</div><div>Tap <b>Settings</b> → <b>Linked Devices</b></div></div>
+          <div class="step"><div class="n">3</div><div>Tap <b>Link a Device</b> → <b>Link with phone number instead</b></div></div>
+          <div class="step"><div class="n">4</div><div>Enter the 8-digit code above</div></div>
+          <div class="step"><div class="n">5</div><div>You'll see "Connected" here automatically</div></div>
+        </div>
+      </div>
+
+      <div id="qrMethod" class="hidden">
+        <div class="qr-box">
+          <div class="qr-placeholder" id="qrPlaceholder">Tap "Generate QR code" below</div>
+        </div>
+        <button class="btn-primary" id="btnGenerateQR" style="margin-bottom:16px">
+          Generate QR code
+        </button>
+        <div class="steps">
+          <h4>How to connect</h4>
+          <div class="step"><div class="n">1</div><div>Open <b>WhatsApp</b> on the phone with your number</div></div>
+          <div class="step"><div class="n">2</div><div>Tap <b>Settings</b> → <b>Linked Devices</b></div></div>
+          <div class="step"><div class="n">3</div><div>Tap <b>Link a Device</b></div></div>
+          <div class="step"><div class="n">4</div><div>Point your phone at the QR code</div></div>
+        </div>
+      </div>
+
+      <p style="font-size:12px;color:var(--muted);margin-top:16px;line-height:1.5;text-align:center">
+        <b>Tip:</b> Use a second number, not your main one. If anything goes wrong during testing, WhatsApp may restrict that number for 24 hours.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span class="ic" id="toastIc">✓</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDFK5Ogxv7Hpp3a-HWPiC2uIRuz704DuWo",
+    authDomain: "toolmey.firebaseapp.com",
+    projectId: "toolmey",
+    storageBucket: "toolmey.firebasestorage.app",
+    messagingSenderId: "505326805775",
+    appId: "1:505326805775:web:401c9d20f919714caad47a",
+    measurementId: "G-2HGC4BP83Y"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ============================================================
+  //  STATE
+  // ============================================================
+  var KEY = "toolmey.whatsappbot.v2";
+  var state = {
+    connectedNumber: null,
+    greeting: "Hi! Thanks for messaging us. How can we help you today?",
+    awayMsg: "We're closed right now. We'll reply as soon as we open.",
+    rules: [
+      { keyword: "price", responses: ["Our prices start at ₦5,000. What item are you interested in?"] },
+      { keyword: "hours", responses: ["We're open Monday to Saturday, 9am - 6pm."] }
+    ],
+    handoff: "",
+    openTime: "09:00",
+    closeTime: "18:00",
+    daysOpen: "1-6",
+    options: { opt24: false, optHuman: true, optTyping: true, optLeads: true },
+    leads: [],
+    inbox: [],
+    stats: { messages: 0, replies: 0, leads: 0, avgResponse: 2 }
+  };
+
+  function saveState() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  function loadState() {
+    var raw;
+    try { raw = localStorage.getItem(KEY); } catch (e) { return; }
+    if (!raw) return;
+    try {
+      var d = JSON.parse(raw);
+      if (d && typeof d === "object") {
+        Object.keys(state).forEach(function (k) {
+          if (d[k] !== undefined) state[k] = d[k];
+        });
+      }
+    } catch (e) {}
+  }
+
+  // ============================================================
+  //  TOAST
+  // ============================================================
+  var toastTimer = null;
+  function toast(msg, kind) {
+    $("toastMsg").textContent = msg;
+    $("toastIc").textContent = kind === "err" ? "!" : "✓";
+    $("toast").className = "toast on " + (kind || "ok");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      $("toast").className = "toast " + (kind || "ok");
+    }, 2400);
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  // ============================================================
+  //  TABS
+  // ============================================================
+  document.querySelectorAll(".tab-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".tab-btn").forEach(function (b) {
+        b.classList.toggle("active", b === btn);
+      });
+      var tab = btn.getAttribute("data-tab");
+      document.querySelectorAll(".tab-panel").forEach(function (p) {
+        p.classList.toggle("active", p.id === "panel-" + tab);
+      });
+      window.scrollTo(0, 0);
+    });
+  });
+
+  // ============================================================
+  //  RENDER DASHBOARD
+  // ============================================================
+  function renderDashboard() {
+    var connected = !!state.connectedNumber;
+
+    // status cards (both places)
+    [["statusCard","statusTitle","statusSub"], ["statusCard2","statusTitle2","statusSub2"]].forEach(function (ids) {
+      var card = $(ids[0]);
+      if (!card) return;
+      card.className = "status-card" + (connected ? "" : " off");
+      $(ids[1]).textContent = connected ? "Connected" : "Not connected";
+      $(ids[2]).textContent = connected
+        ? "Bot is live on +" + state.connectedNumber
+        : "Pair your WhatsApp to activate the bot";
+    });
+
+    $("btnConnect").classList.toggle("hidden", connected);
+    $("btnDisconnect").classList.toggle("hidden", !connected);
+
+    // stats
+    $("statMessages").textContent = state.stats.messages;
+    $("statReplies").textContent = state.stats.replies;
+    $("statLeads").textContent = state.stats.leads;
+    $("statResponse").textContent = state.stats.avgResponse + "s";
+
+    // inbox count
+    $("inboxCount").textContent = state.inbox.length;
+    $("leadCount").textContent = state.leads.length;
+
+    // inbox
+    renderInbox();
+    renderLeads();
+    renderRecentActivity();
+  }
+
+  function renderInbox() {
+    var box = $("inboxList");
+    if (!state.inbox.length) {
+      box.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="ic">📭</div>' +
+          '<h3>Inbox is empty</h3>' +
+          '<p>Connect WhatsApp and messages from customers will appear here.</p>' +
+        '</div>';
+      return;
+    }
+    box.innerHTML = state.inbox.map(function (m) {
+      return '<div class="inbox-item">' +
+        '<div class="inbox-avatar">' + esc((m.name || "?").charAt(0).toUpperCase()) + '</div>' +
+        '<div class="inbox-body">' +
+          '<div class="inbox-head">' +
+            '<b>' + esc(m.name || m.phone) + '</b>' +
+            '<span class="time">' + esc(m.time || "") + '</span>' +
+          '</div>' +
+          '<div class="inbox-msg">' + esc(m.message || "") + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+  }
+
+  function renderLeads() {
+    var box = $("leadList");
+    if (!state.leads.length) {
+      box.innerHTML =
+        '<div class="empty-state">' +
+          '<div class="ic">👥</div>' +
+          '<h3>No leads yet</h3>' +
+          '<p>When customers message your WhatsApp, they\'ll be captured here.</p>' +
+        '</div>';
+      return;
+    }
+    box.innerHTML = state.leads.map(function (l) {
+      return '<div class="lead-row">' +
+        '<div class="lead-avatar">' + esc((l.name || "?").charAt(0).toUpperCase()) + '</div>' +
+        '<div class="lead-info">' +
+          '<b>' + esc(l.name || "Unknown") + '</b>' +
+          '<span>' + esc(l.phone || "") + '</span>' +
+        '</div>' +
+        '<div class="lead-badge">' + esc(l.status || "New") + '</div>' +
+      '</div>';
+    }).join("");
+  }
+
+  function renderRecentActivity() {
+    var box = $("recentActivity");
+    if (!state.inbox.length) return;
+    var recent = state.inbox.slice(0, 3);
+    box.innerHTML = recent.map(function (m) {
+      return '<div class="inbox-item" style="cursor:default">' +
+        '<div class="inbox-avatar">' + esc((m.name || "?").charAt(0).toUpperCase()) + '</div>' +
+        '<div class="inbox-body">' +
+          '<div class="inbox-head">' +
+            '<b>' + esc(m.name || m.phone) + '</b>' +
+            '<span class="time">' + esc(m.time || "") + '</span>' +
+          '</div>' +
+          '<div class="inbox-msg">' + esc(m.message || "") + '</div>' +
+        '</div>' +
+      '</div>';
+    }).join("");
+  }
+
+  // ============================================================
+  //  RENDER BOT SETTINGS
+  // ============================================================
+  function renderSettings() {
+    $("greeting").value = state.greeting;
+    $("awayMsg").value = state.awayMsg;
+    $("openTime").value = state.openTime;
+    $("closeTime").value = state.closeTime;
+    $("daysOpen").value = state.daysOpen;
+    $("handoff").value = state.handoff;
+    $("opt24").checked = state.options.opt24;
+    $("optHuman").checked = state.options.optHuman;
+    $("optTyping").checked = state.options.optTyping;
+    $("optLeads").checked = state.options.optLeads;
+    renderRules();
+  }
+
+  function renderRules() {
+    var box = $("rulesList");
+    $("ruleCount").textContent = state.rules.length;
+    if (!state.rules.length) {
+      box.innerHTML = '<p style="font-size:13px;color:var(--muted);padding:8px 0">No rules yet. Add one below.</p>';
+      return;
+    }
+    box.innerHTML = "";
+    state.rules.forEach(function (r, i) {
+      var div = document.createElement("div");
+      div.className = "rule";
+
+      var responsesHtml = (r.responses || [""]).map(function (resp, j) {
+        return '<div class="response-row">' +
+          '<input type="text" data-field="response" data-i="' + i + '" data-j="' + j + '" placeholder="Reply ' + (j+1) + '..." value="' + esc(resp) + '">' +
+          ((r.responses.length > 1)
+            ? '<button type="button" data-remove-response="' + i + '_' + j + '">×</button>'
+            : '') +
+        '</div>';
+      }).join("");
+
+      div.innerHTML =
+        '<div class="rule-head">' +
+          '<span class="tag">Rule ' + (i+1) + '</span>' +
+          '<button class="rule-del" type="button" data-i="' + i + '">×</button>' +
+        '</div>' +
+        '<div class="rule-inputs">' +
+          '<input type="text" data-field="keyword" data-i="' + i + '" placeholder="If message contains..." value="' + esc(r.keyword) + '">' +
+          responsesHtml +
+          '<button type="button" class="btn-ghost btn-sm" data-add-response="' + i + '" style="justify-content:center">+ Add another reply</button>' +
+        '</div>';
+
+      box.appendChild(div);
+    });
+
+    // events
+    box.querySelectorAll(".rule-del").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var i = parseInt(this.getAttribute("data-i"), 10);
+        state.rules.splice(i, 1);
+        saveState();
+        renderRules();
+      });
+    });
+
+    box.querySelectorAll("[data-add-response]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var i = parseInt(this.getAttribute("data-add-response"), 10);
+        state.rules[i].responses.push("");
+        saveState();
+        renderRules();
+      });
+    });
+
+    box.querySelectorAll("[data-remove-response]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var parts = this.getAttribute("data-remove-response").split("_");
+        var i = parseInt(parts[0], 10);
+        var j = parseInt(parts[1], 10);
+        state.rules[i].responses.splice(j, 1);
+        saveState();
+        renderRules();
+      });
+    });
+
+    box.querySelectorAll("input").forEach(function (input) {
+      input.addEventListener("input", function () {
+        var i = parseInt(this.getAttribute("data-i"), 10);
+        var f = this.getAttribute("data-field");
+        if (f === "keyword") {
+          state.rules[i].keyword = this.value;
+        } else if (f === "response") {
+          var j = parseInt(this.getAttribute("data-j"), 10);
+          state.rules[i].responses[j] = this.value;
+        }
+        saveState();
+      });
+    });
+  }
+
+  $("btnAddRule").addEventListener("click", function () {
+    state.rules.push({ keyword: "", responses: [""] });
+    saveState();
+    renderRules();
+  });
+
+  ["greeting","awayMsg","openTime","closeTime","daysOpen","handoff"].forEach(function (id) {
+    $(id).addEventListener("input", function () {
+      state[id === "awayMsg" ? "awayMsg" : id] = this.value;
+      saveState();
+    });
+    $(id).addEventListener("change", function () {
+      state[id] = this.value;
+      saveState();
+    });
+  });
+
+  ["opt24","optHuman","optTyping","optLeads"].forEach(function (id) {
+    $(id).addEventListener("change", function () {
+      state.options[id] = this.checked;
+      saveState();
+    });
+  });
+
+  $("btnSave").addEventListener("click", function () {
+    saveState();
+    toast("Settings saved", "ok");
+  });
+
+  // ============================================================
+  //  BROADCAST
+  // ============================================================
+  var broadcastTarget = "all";
+
+  document.querySelectorAll(".target-chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      document.querySelectorAll(".target-chip").forEach(function (c) {
+        c.classList.toggle("active", c === chip);
+      });
+      broadcastTarget = chip.getAttribute("data-target");
+      $("customListWrap").classList.toggle("hidden", broadcastTarget !== "custom");
+    });
+  });
+
+  $("broadcastMsg").addEventListener("input", function () {
+    var msg = this.value.trim();
+    var box = $("broadcastPreview");
+    if (!msg) { box.style.display = "none"; return; }
+    box.style.display = "block";
+    $("broadcastPreviewBubble").innerHTML = esc(msg).replace(/\{name\}/g, "<b>Customer</b>").replace(/\n/g, "<br>");
+  });
+
+  $("btnBroadcast").addEventListener("click", function () {
+    var msg = $("broadcastMsg").value.trim();
+    if (!msg) { toast("Write a message first", "err"); return; }
+    if (!state.connectedNumber) { toast("Connect WhatsApp first", "err"); return; }
+    var count = broadcastTarget === "all" ? 0
+              : broadcastTarget === "leads" ? state.leads.length
+              : $("customList").value.split("\n").filter(Boolean).length;
+    if (!confirm("Send this broadcast to " + count + " contacts?")) return;
+    toast("Broadcast queued — " + count + " recipients", "ok");
+  });
+
+  // ============================================================
+  //  LEADS EXPORT
+  // ============================================================
+  $("btnExportLeads").addEventListener("click", function () {
+    if (!state.leads.length) { toast("No leads to export", "err"); return; }
+    var rows = [["Name", "Phone", "Status"]];
+    state.leads.forEach(function (l) {
+      rows.push([l.name || "", l.phone || "", l.status || "New"]);
+    });
+    var csv = rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c == null ? "" : c);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(",");
+    }).join("\n");
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "leads-" + Date.now() + ".csv";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Exported " + state.leads.length + " leads", "ok");
+  });
+
+  // ============================================================
+  //  PAIR MODAL
+  // ============================================================
+  var method = "code";
+  var codeTimer = null;
+  var codeExpiry = 0;
+
+  $("btnConnect").addEventListener("click", function () {
+    $("pairModal").className = "modal on";
+    $("codeBox").classList.add("hidden");
+    $("codeValue").textContent = "----";
+  });
+  $("btnDisconnect").addEventListener("click", function () {
+    if (!confirm("Disconnect your WhatsApp number? The bot will stop replying.")) return;
+    state.connectedNumber = null;
+    saveState();
+    renderDashboard();
+    toast("Disconnected", "ok");
+  });
+  $("btnCloseModal").addEventListener("click", function () {
+    $("pairModal").className = "modal";
+    if (codeTimer) { clearInterval(codeTimer); codeTimer = null; }
+  });
+  $("pairModal").addEventListener("click", function (e) {
+    if (e.target === this) {
+      this.className = "modal";
+      if (codeTimer) { clearInterval(codeTimer); codeTimer = null; }
+    }
+  });
+  document.querySelectorAll(".method-tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      method = tab.getAttribute("data-method");
+      document.querySelectorAll(".method-tab").forEach(function (t) {
+        t.classList.toggle("active", t === tab);
+      });
+      $("codeMethod").classList.toggle("hidden", method !== "code");
+      $("qrMethod").classList.toggle("hidden", method !== "qr");
+    });
+  });
+
+  $("btnGenerateCode").addEventListener("click", function () {
+    var phone = $("phone").value.replace(/\D/g, "");
+    if (phone.length < 10) { toast("Enter a valid phone number", "err"); return; }
+    var code = generateMockCode();
+    showCode(code, 300);
+  });
+
+  function generateMockCode() {
+    var chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    var out = "";
+    for (var i = 0; i < 8; i++) out += chars.charAt(Math.floor(Math.random() * chars.length));
+    return out.slice(0, 4) + "-" + out.slice(4);
+  }
+
+  function showCode(code, secondsToExpire) {
+    $("codeValue").textContent = code;
+    $("codeBox").classList.remove("hidden");
+    codeExpiry = Date.now() + secondsToExpire * 1000;
+    if (codeTimer) clearInterval(codeTimer);
+    codeTimer = setInterval(function () {
+      var left = Math.max(0, Math.floor((codeExpiry - Date.now()) / 1000));
+      var m = Math.floor(left / 60);
+      var s = left % 60;
+      $("codeExpiry").textContent = left > 0
+        ? "Expires in " + m + ":" + (s < 10 ? "0" + s : s)
+        : "Expired — generate a new code";
+      if (!window.__demoPaired && Date.now() > codeExpiry - (secondsToExpire - 6) * 1000) {
+        window.__demoPaired = true;
+        completePairing();
+      }
+    }, 1000);
+  }
+
+  $("btnGenerateQR").addEventListener("click", function () {
+    var phone = $("phone").value.replace(/\D/g, "");
+    if (phone.length < 10) { toast("Enter a valid phone number first", "err"); return; }
+    var box = $("qrPlaceholder");
+    box.style.background = "#fff";
+    box.style.border = "1.5px solid var(--line)";
+    box.style.padding = "8px";
+    box.innerHTML = '<canvas id="qrCanvas" width="240" height="240"></canvas>';
+    drawFakeQR($("qrCanvas"));
+
+    if (codeTimer) clearInterval(codeTimer);
+    var timeout = 8;
+    codeTimer = setInterval(function () {
+      timeout--;
+      if (timeout <= 0) { clearInterval(codeTimer); completePairing(); }
+    }, 1000);
+  });
+
+  function drawFakeQR(canvas) {
+    var ctx = canvas.getContext("2d");
+    var size = 240, cells = 25, cell = size / cells;
+    ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = "#0f172a";
+    for (var y = 0; y < cells; y++) {
+      for (var x = 0; x < cells; x++) {
+        var inCorner = (x < 7 && y < 7) || (x > cells - 8 && y < 7) || (x < 7 && y > cells - 8);
+        if (!inCorner && Math.random() > 0.5) ctx.fillRect(x * cell, y * cell, cell, cell);
+      }
+    }
+    [[0,0],[cells-7,0],[0,cells-7]].forEach(function (p) {
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect(p[0]*cell, p[1]*cell, 7*cell, 7*cell);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect((p[0]+1)*cell, (p[1]+1)*cell, 5*cell, 5*cell);
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect((p[0]+2)*cell, (p[1]+2)*cell, 3*cell, 3*cell);
+    });
+  }
+
+  function completePairing() {
+    if (codeTimer) { clearInterval(codeTimer); codeTimer = null; }
+    var phone = $("phone").value.replace(/\D/g, "");
+    state.connectedNumber = phone;
+    saveState();
+    $("pairModal").className = "modal";
+    window.__demoPaired = false;
+    renderDashboard();
+    toast("WhatsApp connected!", "ok");
+  }
+
+  // ============================================================
+  //  BOOT
+  // ============================================================
+  loadState();
+  renderDashboard();
+  renderSettings();
+
+  onAuthStateChanged(auth, function (user) {
+    if (!user) {
+      // Not logged in — send to auth page
+      window.location.href = "auth.html";
+      return;
+    }
+    // Could store user-specific data keyed by user.uid here later
+    // For now, everything is on-device via localStorage
+  });
+
+</script>
+</body>
+</html>

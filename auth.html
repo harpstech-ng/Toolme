@@ -20,18 +20,15 @@
     font-size:15px;line-height:1.5;
     -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
     background-image:radial-gradient(circle at 100% 0%, rgba(37,99,235,.08) 0%, transparent 45%);
-    background-attachment:fixed;
-    overflow-x:hidden}
+    background-attachment:fixed;overflow-x:hidden}
 
   .screen{
     position:fixed;top:0;left:0;right:0;bottom:0;
-    display:flex;flex-direction:column;
-    padding:20px;
+    display:flex;flex-direction:column;padding:20px;
     opacity:0;visibility:hidden;
     transition:opacity .3s,visibility .3s;
     overflow-y:auto;-webkit-overflow-scrolling:touch;
-    z-index:1;
-  }
+    z-index:1}
   .screen.active{opacity:1;visibility:visible;z-index:2}
 
   .container{max-width:420px;width:100%;margin:auto;padding:20px 0}
@@ -44,8 +41,7 @@
     color:#fff;font-weight:900;font-size:26px;
     margin:0 auto 16px;
     box-shadow:0 10px 30px rgba(37,99,235,.35);
-    letter-spacing:-1px;
-  }
+    letter-spacing:-1px}
   .logo-head h1{font-size:26px;font-weight:800;letter-spacing:-.8px;margin-bottom:6px}
   .logo-head p{font-size:14.5px;color:var(--muted);line-height:1.5;
     max-width:320px;margin:0 auto}
@@ -53,44 +49,29 @@
   .card{
     background:#fff;border:1px solid var(--line);
     border-radius:18px;padding:24px;
-    box-shadow:0 1px 3px rgba(15,23,42,.04);
-  }
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
 
-  /* Google button */
   .btn-google{
-    width:100%;
-    background:#fff;
-    color:#3c4043;
-    border:1.5px solid var(--line-strong);
-    padding:14px;
-    font-size:15px;
-    font-weight:600;
-    border-radius:12px;
+    width:100%;background:#fff;color:#3c4043;
+    border:1.5px solid var(--line-strong);padding:14px;
+    font-size:15px;font-weight:600;border-radius:12px;
     display:flex;align-items:center;justify-content:center;gap:10px;
-    min-height:52px;
-    font-family:inherit;
-    cursor:pointer;
+    min-height:52px;font-family:inherit;cursor:pointer;
     transition:background .15s,border-color .15s,box-shadow .15s;
-    -webkit-tap-highlight-color:transparent;
-  }
+    -webkit-tap-highlight-color:transparent}
   .btn-google:hover:not(:disabled){
-    background:#f8f9fa;
-    border-color:#dadce0;
-    box-shadow:0 1px 3px rgba(15,23,42,.08);
-  }
+    background:#f8f9fa;border-color:#dadce0;
+    box-shadow:0 1px 3px rgba(15,23,42,.08)}
   .btn-google:active:not(:disabled){transform:scale(.985)}
   .btn-google:disabled{opacity:.6;cursor:not-allowed}
   .btn-google svg{flex:0 0 auto}
 
   .divider{
     display:flex;align-items:center;gap:12px;
-    margin:18px 0;
-    font-size:12px;color:var(--dim);font-weight:600;
-    text-transform:uppercase;letter-spacing:1px;
-  }
+    margin:18px 0;font-size:12px;color:var(--dim);font-weight:600;
+    text-transform:uppercase;letter-spacing:1px}
   .divider::before,.divider::after{
-    content:"";flex:1;height:1px;background:var(--line);
-  }
+    content:"";flex:1;height:1px;background:var(--line)}
 
   .field{margin-bottom:14px}
   .field:last-child{margin-bottom:0}
@@ -100,9 +81,9 @@
     border:1.5px solid var(--line-strong);border-radius:12px;
     font:inherit;font-size:15px;background:#fff;color:var(--text);
     outline:none;transition:border-color .15s,box-shadow .15s;
-    -webkit-appearance:none;appearance:none;
-  }
-  input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+    -webkit-appearance:none;appearance:none}
+  input:focus{border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(37,99,235,.12)}
   input::placeholder{color:var(--dim)}
   input:disabled{background:var(--card-2);opacity:.7}
 
@@ -113,23 +94,20 @@
     background:transparent;border:0;color:var(--muted);
     font-size:12px;font-weight:700;padding:6px 10px;
     cursor:pointer;letter-spacing:.3px;text-transform:uppercase;
-    border-radius:6px;
-  }
+    border-radius:6px}
   .pw-toggle:hover{color:var(--blue);background:var(--blue-light)}
 
   .error-box{
     background:var(--red-light);border:1px solid #fecaca;color:#991b1b;
     padding:12px 14px;border-radius:10px;font-size:13.5px;
-    margin-bottom:14px;display:none;line-height:1.5;
-  }
+    margin-bottom:14px;display:none;line-height:1.5}
   .error-box.on{display:block}
   .error-box b{font-weight:700}
 
   .ok-box{
     background:var(--green-light);border:1px solid #86efac;color:#166534;
     padding:12px 14px;border-radius:10px;font-size:13.5px;
-    margin-bottom:14px;display:none;line-height:1.5;
-  }
+    margin-bottom:14px;display:none;line-height:1.5}
   .ok-box.on{display:block}
 
   button{font:inherit;border:0;cursor:pointer;
@@ -144,22 +122,19 @@
     border-radius:12px;margin-top:6px;
     box-shadow:0 4px 14px rgba(37,99,235,.25);
     display:flex;align-items:center;justify-content:center;gap:8px;
-    min-height:52px;
-  }
+    min-height:52px}
   .btn-primary:hover:not(:disabled){background:var(--blue-dark)}
   .btn-primary .spinner{
     width:16px;height:16px;
     border:2px solid rgba(255,255,255,.3);
     border-top-color:#fff;border-radius:50%;
-    animation:spin .6s linear infinite;
-  }
+    animation:spin .6s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
   .text-link{
     background:transparent;color:var(--blue);
     font-size:13.5px;font-weight:600;padding:6px 0;
-    text-decoration:none;
-  }
+    text-decoration:none}
   .text-link:hover{text-decoration:underline}
 
   .row-between{display:flex;align-items:center;justify-content:space-between;
@@ -169,40 +144,34 @@
   .muted-line b{color:var(--text);font-weight:700}
 
   .back-btn{
-    position:absolute;top:20px;left:20px;
-    background:#fff;border:1px solid var(--line);
-    width:40px;height:40px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    color:var(--text);font-size:18px;font-weight:700;
-    box-shadow:0 2px 8px rgba(15,23,42,.06);
-    padding:0;z-index:5;
-  }
+    position:absolute;top:20px;left:20px;background:#fff;
+    border:1px solid var(--line);width:40px;height:40px;
+    border-radius:50%;display:flex;align-items:center;
+    justify-content:center;color:var(--text);font-size:18px;
+    font-weight:700;box-shadow:0 2px 8px rgba(15,23,42,.06);
+    padding:0;z-index:5}
   .back-btn:hover{background:var(--card-2)}
 
   .terms-check{
     display:flex;gap:10px;align-items:flex-start;
-    margin:6px 0 16px;
-    font-size:13px;color:var(--muted);line-height:1.5;
-  }
+    margin:6px 0 16px;font-size:13px;color:var(--muted);line-height:1.5}
   .terms-check input{
     width:18px;height:18px;margin-top:2px;flex:0 0 auto;
     -webkit-appearance:checkbox;appearance:checkbox;
-    accent-color:var(--blue);
-  }
+    accent-color:var(--blue)}
   .terms-check a{color:var(--blue);font-weight:600;text-decoration:none}
   .terms-check a:hover{text-decoration:underline}
 
   .terms-body{
     background:#fff;border:1px solid var(--line);
-    border-radius:18px;padding:24px;
-    font-size:14px;line-height:1.7;color:var(--text);
-    max-height:70vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
-    box-shadow:0 1px 3px rgba(15,23,42,.04);
-  }
-  .terms-body h2{font-size:16px;font-weight:800;margin-bottom:10px;
+    border-radius:18px;padding:24px;font-size:14px;line-height:1.ey7;
+    color:var(--text);max-height:70vh;overflow-y:auto;
+    -webkit-overflow-scrolling running:touch;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .terms -body h2{font-size:16px;font-weight:800;margin-bottom:1024px;
     margin-top:20px;letter-spacing:-.2px}
-  .terms-body h2:first-child{margin-top:0}
-  .terms-body p{color:var(--muted);margin-bottom:10px}
+  .terms-body h2:first/-child{margin-top:0}
+  .terms-body p{color:var(--muted);margin-bottom:10px7}
   .terms-body ul{margin:8px 0 12px 20px;color:var(--muted)}
   .terms-body li{margin-bottom:6px}
   .terms-body b{color:var(--text)}
@@ -211,33 +180,27 @@
   .btn-ghost{
     background:#fff;color:var(--text);
     border:1.5px solid var(--line-strong);
-    padding:14px;font-size:14.5px;font-weight:700;border-radius:12px;
-  }
-  .btn-ghost:hover:not(:disabled){background:var(--card-2);border-color:var(--muted)}
+    padding:14px;font-size:14.5px;font-weight:700;border-radius:12px}
+  .btn-ghost:hover:not(:disabled){background:var(--card-2);
+    border-color:var(--muted)}
 
   .splash-loading{text-align:center;color:var(--muted);font-size:14px}
   .splash-loading .spinner{
-    width:28px;height:28px;
-    border:3px solid var(--line);
+    width:28px;height:28px;border:3px solid var(--line);
     border-top-color:var(--blue);border-radius:50%;
-    animation:spin .7s linear infinite;
-    margin:0 auto 14px;
-  }
+    animation:spin .7s linear infinite;margin:0 auto 14px}
 
   .user-pill{
     background:#fff;border:1px solid var(--line);
     border-radius:14px;padding:16px;
-    display:flex;align-items:center;gap:12px;
-    margin-bottom:16px;
-    box-shadow:0 1px 3px rgba(15,23,42,.04);
-  }
+    display:flex;align-items:center;gap:12px;margin-bottom:16px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
   .avatar-big{
     width:48px;height:48px;border-radius:50%;
     background:linear-gradient(135deg,var(--blue),var(--purple));
     display:flex;align-items:center;justify-content:center;
     color:#fff;font-weight:800;font-size:18px;flex:0 0 auto;
-    overflow:hidden;
-  }
+    overflow:hidden}
   .avatar-big img{width:100%;height:100%;object-fit:cover}
   .user-pill .info{flex:1;min-width:0}
   .user-pill .info b{display:block;font-size:15px;margin-bottom:2px;
@@ -248,14 +211,13 @@
     background:var(--red-light);color:#991b1b;
     border:1px solid #fecaca;
     padding:8px 14px;font-size:12.5px;font-weight:700;border-radius:8px;
-  }
+    font-family:inherit;cursor:pointer}
   .btn-logout:hover{background:#fee2e2}
 
   .dash-hero{
     background:#fff;border:1px solid var(--line);
     border-radius:18px;padding:24px;text-align:center;
-    box-shadow:0 1px 3px rgba(15,23,42,.04);
-  }
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
   .dash-hero h2{font-size:20px;font-weight:800;letter-spacing:-.4px;margin-bottom:8px}
   .dash-hero p{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:18px}
 </style>
@@ -284,7 +246,6 @@
       <h1>Welcome back</h1>
       <p>Log in to continue to Toolmey.</p>
     </div>
-
     <div class="card">
       <div class="error-box" id="loginError"></div>
       <div class="ok-box" id="loginOk"></div>
@@ -293,8 +254,8 @@
         <svg width="18" height="18" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
           <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12, 0 24c0 3.88.92 7.54 2.56 10.78l7 but.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 we 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92  can2.3-8.16 2.3-6.26 0-11.57-4.'t22-13.47-9.91l-7.98 6.19C6.51 42.62  promise14.62 48 24 48z"/>
         </svg>
         Continue with Google
       </button>
@@ -342,7 +303,6 @@
       <h1>Create account</h1>
       <p>Start using Toolmey in seconds.</p>
     </div>
-
     <div class="card">
       <div class="error-box" id="signupError"></div>
 
@@ -360,8 +320,7 @@
 
       <div class="field">
         <label for="signupName">Your name or business name</label>
-        <input type="text" id="signupName" placeholder="e.g. Harps Tech"
-          autocomplete="name">
+        <input type="text" id="signupName" placeholder="e.g. Harps Tech" autocomplete="name">
       </div>
 
       <div class="field">
@@ -409,7 +368,6 @@
       <h1>Reset password</h1>
       <p>Enter your email and we'll send you a reset link.</p>
     </div>
-
     <div class="card">
       <div class="error-box" id="forgotError"></div>
       <div class="ok-box" id="forgotOk"></div>
@@ -443,7 +401,7 @@
 
     <div class="terms-body">
       <h2>1. What Toolmey is</h2>
-      <p>Toolmey is a suite of tools that help you find leads, send bulk email, and automate customer messages on WhatsApp. You can use it for personal or business use.</p>
+      <p>Toolmey is a suite of tools that help you find leads, send bulk email, and automate customer messages on WhatsApp.</p>
 
       <h2>2. Your account</h2>
       <p>You are responsible for keeping your login details safe. Don't share your password with anyone. If someone uses your account, you're responsible for what they do with it.</p>
@@ -460,19 +418,19 @@
       <p>We store your email, name, and the settings you save. We do not sell your data to anyone. We use Firebase (Google) to store accounts securely.</p>
 
       <h2>5. Email and WhatsApp sending</h2>
-      <p>When you send email or messages through Toolmey, you are the sender. You must have permission to contact the people you're messaging. If your account gets flagged by Gmail, Brevo, WhatsApp, or any other provider for spam, that's on you — we can't undo it.</p>
+      <p>When you send email or messages through Toolmey, you are the sender. You must have permission to contact the people you're messaging.</p>
 
       <h2>6. Pricing</h2>
       <p>Some tools are free. Some are paid. Prices are shown in the app. We can change prices at any time, but we'll always tell you before charging you more.</p>
 
       <h2>7. Limits and availability</h2>
-      <p>We try to keep Toolmey running 24/7, but we can't promise it will never go down. We're not liable for lost time, money, or opportunities if the service has an issue.</p>
+      <p>We try to keep Toolm it will never go down.</p>
 
       <h2>8. Ending your account</h2>
-      <p>You can close your account any time by contacting us. We can also close your account if you break these rules.</p>
+      <p>You can close your account any time by contacting us.</p>
 
       <h2>9. Changes to these terms</h2>
-      <p>We might update these terms. If we make big changes, we'll tell you by email before they take effect.</p>
+      <p>We might update these terms. If we make big changes, we'll tell you by email.</p>
 
       <h2>10. Contact</h2>
       <p>Questions? Reach us at <b>hello@toolmey.com</b> or on WhatsApp at <b>+234 814 161 3736</b>.</p>
@@ -507,21 +465,18 @@
 
     <div class="dash-hero">
       <h2>Authentication is live ✅</h2>
-      <p>Email and Google sign-in both work now. Next step is to wire this into your actual tools — Lead Finder, Bulk Mailer, WhatsApp Bot.</p>
-      <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;
+      <p>Signup, login, and password reset work with Firebase. Next step is to wire this into your actual tools.</p>
+      <a href="dashboard.html" style="display:inline-flex;align-items:center;gap:6px;
         background:var(--blue);color:#fff;padding:13px 20px;
         font-weight:700;font-size:14.5px;border-radius:12px;
         text-decoration:none;box-shadow:0 4px 14px rgba(37,99,235,.25)">
-        Go to tools →
+        Open dashboard →
       </a>
     </div>
   </div>
 </div>
 
 <script type="module">
-  // ============================================================
-  //  FIREBASE CONFIG (safe to expose per Google's docs)
-  // ============================================================
   const firebaseConfig = {
     apiKey: "AIzaSyDFK5Ogxv7Hpp3a-HWPiC2uIRuz704DuWo",
     authDomain: "toolmey.firebaseapp.com",
@@ -540,15 +495,11 @@
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
   var $ = function (id) { return document.getElementById(id); };
-
   var app = initializeApp(firebaseConfig);
   var auth = getAuth(app);
   var googleProvider = new GoogleAuthProvider();
   googleProvider.setCustomParameters({ prompt: "select_account" });
 
-  // ============================================================
-  //  SCREEN ROUTER
-  // ============================================================
   var SCREENS = ["Splash", "Login", "Signup", "Forgot", "Terms", "Dashboard"];
   function show(name) {
     SCREENS.forEach(function (s) {
@@ -557,9 +508,6 @@
     window.scrollTo(0, 0);
   }
 
-  // ============================================================
-  //  ERROR HELPERS
-  // ============================================================
   function firebaseError(err) {
     var code = err && err.code ? err.code : "";
     var map = {
@@ -616,9 +564,7 @@
 
   function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e); }
 
-  // ============================================================
-  //  NAVIGATION
-  // ============================================================
+  // navigation
   $("goSignupInline").addEventListener("click", function () { show("Signup"); });
   $("goLoginInline").addEventListener("click", function () { show("Login"); });
   $("goForgot").addEventListener("click", function () { show("Forgot"); });
@@ -639,9 +585,7 @@
     });
   });
 
-  // ============================================================
-  //  PASSWORD SHOW / HIDE
-  // ============================================================
+  // password show/hide
   document.querySelectorAll(".pw-toggle").forEach(function (btn) {
     btn.addEventListener("click", function () {
       var input = $(this.getAttribute("data-target"));
@@ -651,15 +595,12 @@
     });
   });
 
-  // ============================================================
-  //  GOOGLE SIGN-IN (redirect flow — works on iPhone Safari)
-  // ============================================================
+  // google sign-in (redirect flow)
   async function googleSignIn(btn, errorElId) {
     clearError(errorElId);
     setLoading(btn, true, "Redirecting to Google…");
     try {
       await signInWithRedirect(auth, googleProvider);
-      // Page navigates away — code below won't run until user comes back
     } catch (err) {
       showError(errorElId, firebaseError(err));
       setLoading(btn, false);
@@ -673,9 +614,7 @@
     googleSignIn(this, "signupError");
   });
 
-  // ============================================================
-  //  EMAIL SIGNUP
-  // ============================================================
+  // email signup
   $("btnSignup").addEventListener("click", async function () {
     clearError("signupError");
     var name = $("signupName").value.trim();
@@ -693,16 +632,13 @@
     try {
       var cred = await createUserWithEmailAndPassword(auth, email, password);
       try { await updateProfile(cred.user, { displayName: name }); } catch (e) {}
-      // onAuthStateChanged takes over
     } catch (err) {
       showError("signupError", firebaseError(err));
       setLoading(btn, false);
     }
   });
 
-  // ============================================================
-  //  EMAIL LOGIN
-  // ============================================================
+  // email login
   $("btnLogin").addEventListener("click", async function () {
     clearError("loginError");
     clearOk("loginOk");
@@ -716,16 +652,13 @@
     setLoading(btn, true, "Logging in…");
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // onAuthStateChanged takes over
     } catch (err) {
       showError("loginError", firebaseError(err));
       setLoading(btn, false);
     }
   });
 
-  // ============================================================
-  //  FORGOT PASSWORD
-  // ============================================================
+  // forgot password
   $("btnForgot").addEventListener("click", async function () {
     clearError("forgotError");
     clearOk("forgotOk");
@@ -745,17 +678,13 @@
     }
   });
 
-  // ============================================================
-  //  LOGOUT
-  // ============================================================
+  // logout
   $("btnLogout").addEventListener("click", async function () {
     if (!confirm("Log out of Toolmey?")) return;
     try { await signOut(auth); } catch (e) {}
   });
 
-  // ============================================================
-  //  AUTH STATE — routes the user
-  // ============================================================
+  // auth state
   function onUser(user) {
     if (user) {
       var name = user.displayName || (user.email || "").split("@")[0] || "User";
@@ -771,26 +700,29 @@
         avatar.textContent = name.charAt(0).toUpperCase();
       }
 
+      // if there's a "next" param, go there first
+      var params = new URLSearchParams(window.location.search);
+      var next = params.get("next");
+      if (next && /^[a-z0-9\-]+\.html$/i.test(next)) {
+        window.location.href = next;
+        return;
+      }
+
       show("Dashboard");
     } else {
       show("Login");
     }
   }
 
-  // ============================================================
-  //  BOOT — handle Google redirect + start auth listener
-  // ============================================================
+  // boot
   (async function boot() {
-    // If we just came back from Google redirect, grab the result (and any error)
     try {
       await getRedirectResult(auth);
     } catch (err) {
       showError("loginError", firebaseError(err));
     }
-    // Listen for auth changes — this handles all three flows
     onAuthStateChanged(auth, onUser);
   })();
-
 </script>
 </body>
 </html>

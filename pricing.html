@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing - Toolmey</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f6f8fb;--card:#ffffff;--card-2:#f9fafb;--line:#e5e7eb;--line-strong:#d1d5db;
+    --text:#0f172a;--muted:#64748b;--dim:#94a3b8;
+    --blue:#2563eb;--blue-dark:#1d4ed8;--blue-light:#eff6ff;
+    --green:#16a34a;--green-light:#f0fdf4;
+    --purple:#7c3aed;--purple-light:#f5f3ff;
+    --orange:#ea580c;--orange-light:#fff7ed;
+    --red:#dc2626;--red-light:#fef2f2;
+  }
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
+    padding-bottom:40px;
+    background-image:radial-gradient(circle at 100% 0%, rgba(37,99,235,.06) 0%, transparent 40%);
+    background-attachment:fixed}
+  .navbar{background:rgba(255,255,255,.9);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    padding:14px 20px;position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between}
+  .back{display:flex;align-items:center;gap:6px;text-decoration:none;
+    color:var(--muted);font-size:13.5px;font-weight:600;padding:6px 10px;
+    border-radius:8px}
+  .back:hover{background:var(--card-2);color:var(--text)}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;
+    font-size:14.5px;letter-spacing:-.3px;color:var(--text)}
+  .brand .mark{width:24px;height:24px;border-radius:7px;
+    background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:900;color:#fff;
+    box-shadow:0 2px 8px rgba(37,99,235,.3)}
+  .wrap{max-width:640px;margin:0 auto;padding:20px}
+  .hero{text-align:center;padding:28px 0 20px}
+  .hero h1{font-size:32px;font-weight:800;letter-spacing:-1.2px;
+    margin-bottom:10px;line-height:1.1}
+  .hero h1 .accent{background:linear-gradient(135deg,var(--blue),var(--purple));
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--muted);font-size:15px;line-height:1.55;
+    max-width:440px;margin:0 auto}
+  .current-banner{background:linear-gradient(135deg,var(--blue-light) 0%,var(--purple-light) 100%);
+    border:1px solid #c7d2fe;border-radius:14px;padding:16px;
+    margin-bottom:20px;display:flex;align-items:center;gap:12px}
+  .current-banner .ic{font-size:22px;flex:0 0 auto}
+  .current-banner .info{flex:1;min-width:0}
+  .current-banner .info b{display:block;font-size:14.5px;margin-bottom:2px}
+  .current-banner .info span{font-size:13px;color:var(--muted)}
+  .plans{display:flex;flex-direction:column;gap:14px;margin-bottom:24px}
+  .plan{background:#fff;border:1.5px solid var(--line);
+    border-radius:18px;padding:22px;position:relative;
+    transition:border-color .15s,box-shadow .15s;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .plan:hover{border-color:var(--line-strong);
+    box-shadow:0 4px 14px rgba(15,23,42,.06)}
+  .plan.featured{border-color:var(--blue);
+    box-shadow:0 8px 24px rgba(37,99,235,.15);
+    background:linear-gradient(180deg,#fff 0%,#fafbff 100%)}
+  .plan.current{border-color:var(--green);
+    background:linear-gradient(180deg,#fff 0%,var(--green-light) 100%)}
+  .plan-badge{position:absolute;top:-10px;left:20px;
+    background:linear-gradient(135deg,var(--blue),var(--purple));
+    color:#fff;font-size:10.5px;font-weight:800;
+    padding:4px 12px;border-radius:99px;letter-spacing:.7px;
+    text-transform:uppercase;
+    box-shadow:0 2px 8px rgba(37,99,235,.3)}
+  .plan-badge.current-badge{background:linear-gradient(135deg,var(--green),#4ade80);
+    box-shadow:0 2px 8px rgba(22,163,74,.3)}
+  .plan-head{margin-bottom:16px}
+  .plan-name{font-size:18px;font-weight:800;letter-spacing:-.4px;
+    margin-bottom:6px}
+  .plan-desc{font-size:13.5px;color:var(--muted);line-height:1.5}
+  .plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:16px;
+    padding-bottom:16px;border-bottom:1px dashed var(--line)}
+  .plan-price .amount{font-size:32px;font-weight:800;
+    letter-spacing:-1.2px;color:var(--text)}
+  .plan-price .currency{font-size:16px;font-weight:700;color:var(--text)}
+  .plan-price .period{font-size:13.5px;color:var(--muted);font-weight:600}
+  .plan-features{list-style:none;margin-bottom:18px}
+  .plan-features li{display:flex;align-items:flex-start;gap:10px;
+    padding:6px 0;font-size:13.5px;line-height:1.5}
+  .plan-features .check{flex:0 0 auto;width:18px;height:18px;border-radius:50%;
+    background:var(--green-light);border:1px solid #86efac;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--green);font-size:11px;font-weight:800;margin-top:1px}
+  .plan-features .x{flex:0 0 auto;width:18px;height:18px;border-radius:50%;
+    background:var(--card-2);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--dim);font-size:11px;font-weight:800;margin-top:1px}
+  .plan-features .muted{color:var(--muted)}
+  .plan-btn{width:100%;padding:14px;border:0;border-radius:12px;
+    font-size:15px;font-weight:800;cursor:pointer;
+    font-family:inherit;transition:.15s;
+    -webkit-tap-highlight-color:transparent}
+  .plan-btn:active:not(:disabled){transform:scale(.98)}
+  .plan-btn:disabled{opacity:.6;cursor:not-allowed}
+  .plan-btn.primary{background:var(--blue);color:#fff;
+    box-shadow:0 4px 14px rgba(37,99,235,.3)}
+  .plan-btn.primary:hover:not(:disabled){background:var(--blue-dark)}
+  .plan-btn.ghost{background:var(--card-2);color:var(--text);
+    border:1.5px solid var(--line-strong)}
+  .plan-btn.ghost:hover:not(:disabled){background:#fff;border-color:var(--muted)}
+  .plan-btn.current-btn{background:var(--green-light);color:#166534;
+    border:1.5px solid #86efac;cursor:default}
+  .faq{margin-top:28px}
+  .faq h2{font-size:11.5px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;color:var(--dim);margin-bottom:14px;
+    display:flex;align-items:center;gap:12px}
+  .faq h2::after{content:"";flex:1;height:1px;background:var(--line)}
+  .faq-item{background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:16px;margin-bottom:10px}
+  .faq-item summary{font-size:14px;font-weight:700;cursor:pointer;
+    display:flex;align-items:center;justify-content:space-between;
+    list-style:none}
+  .faq-item summary::-webkit-details-marker{display:none}
+  .faq-item summary::after{content:"+";font-size:18px;
+    color:var(--muted);font-weight:800;transition:.2s}
+  .faq-item[open] summary::after{transform:rotate(45deg)}
+  .faq-item p{font-size:13.5px;color:var(--muted);line-height:1.6;
+    margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+  .footer-note{text-align:center;font-size:12.5px;color:var(--dim);
+    padding:20px 0;line-height:1.6}
+  .footer-note b{color:var(--muted);font-weight:700}
+  .footer-note a{color:var(--blue);text-decoration:none;font-weight:600}
+  .footer-note a:hover{text-decoration:underline}
+  .status{padding:14px 16px;border-radius:12px;font-size:14px;
+    display:none;line-height:1.5;margin-bottom:16px;
+    border:1px solid transparent}
+  .status.on{display:block}
+  .status.info{background:var(--blue-light);color:#1e40af;border-color:#bfdbfe}
+  .status.err{background:var(--red-light);color:#991b1b;border-color:#fecaca}
+  .status.ok{background:var(--green-light);color:#166534;border-color:#86efac}
+  .toast{position:fixed;bottom:24px;left:50%;
+    -webkit-transform:translateX(-50%) translateY(100px);
+    transform:translateX(-50%) translateY(100px);
+    background:var(--text);color:#fff;padding:12px 20px;
+    border-radius:99px;font-size:13.5px;font-weight:600;z-index:300;
+    -webkit-transition:-webkit-transform .3s cubic-bezier(.2,.8,.3,1);
+    transition:transform .3s cubic-bezier(.2,.8,.3,1);
+    box-shadow:0 10px 30px rgba(15,23,42,.25);display:flex;
+    align-items:center;gap:8px;max-width:calc(100% - 40px)}
+  .toast.on{-webkit-transform:translateX(-50%) translateY(0);
+    transform:translateX(-50%) translateY(0)}
+  .toast.ok .ic{color:#4ade80}
+  .toast.err .ic{color:#f87171}
+  .loading-screen{position:fixed;top:0;left:0;right:0;bottom:0;
+    background:var(--bg);display:flex;align-items:center;
+    justify-content:center;z-index:100;flex-direction:column;gap:16px}
+  .loading-screen .spinner{width:32px;height:32px;
+    border:3px solid var(--line);border-top-color:var(--blue);
+    border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .loading-screen p{font-size:14px;color:var(--muted)}
+  .loading-screen.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="loading-screen" id="loading">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
+
+<nav class="navbar">
+  <a href="dashboard.html" class="back">Back</a>
+  <div class="brand">
+    <div class="mark">T</div>
+    Pricing
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section class="hero">
+    <h1>Pick a plan.<br><span class="accent">Get to work.</span></h1>
+    <p>Pay once a month. Cancel anytime. Your data stays yours.</p>
+  </section>
+
+  <div id="currentBanner" class="current-banner" style="display:none">
+    <div class="ic">OK</div>
+    <div class="info">
+      <b id="currentPlanName">Free Plan</b>
+      <span id="currentPlanInfo">5 sends per day</span>
+    </div>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="plans" id="plans"></div>
+
+  <div class="faq">
+    <h2>Questions</h2>
+
+    <details class="faq-item">
+      <summary>How do I send emails with my own account?</summary>
+      <p>After subscribing, you connect your own free Brevo account inside the mailer. Your emails send through your Brevo, using your quota. We never touch your sending. You are always in control.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What happens when I hit my daily limit?</summary>
+      <p>The tool blocks further sends until midnight. You can upgrade any time to increase your limit instantly. Your unsent recipients stay saved. Just send them tomorrow.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Can I cancel anytime?</summary>
+      <p>Yes. Your plan runs until the end of the current period, then downgrades to Free. No auto-billing traps.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>Is my payment secure?</summary>
+      <p>All payments go through Paystack. We never see your card details. Paystack handles everything and confirms when your payment succeeds.</p>
+    </details>
+
+    <details class="faq-item">
+      <summary>What if I want more than 1,000 emails a day?</summary>
+      <p>Message us on WhatsApp. We have custom plans for agencies and high-volume senders. Rates start at 50,000 Naira per month for 5,000 per day.</p>
+    </details>
+  </div>
+
+  <p class="footer-note">
+    Payments by <b>Paystack</b>. Cancel anytime.<br>
+    Questions? <a href="https://wa.me/2348141613736">Message us on WhatsApp</a>.
+  </p>
+
+</div>
+
+<div class="toast" id="toast">
+  <span class="ic" id="toastIc">OK</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  var firebaseConfig = {
+    apiKey: "AIzaSyDFK5Ogxv7Hpp3a-HWPiC2uIRuz704DuWo",
+    authDomain: "toolmey.firebaseapp.com",
+    projectId: "toolmey",
+    storageBucket: "toolmey.firebasestorage.app",
+    messagingSenderId: "505326805775",
+    appId: "1:505326805775:web:401c9d20f919714caad47a",
+    measurementId: "G-2HGC4BP83Y"
+  };
+
+  var PAYSTACK_PUBLIC_KEY = "pk_test_76af63ace30705f37822cb9aa7b3641681dd911b";
+
+  var app = initializeApp(firebaseConfig);
+  var auth = getAuth(app);
+  var db = getFirestore(app);
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var PLANS = [
+    {
+      id: "free",
+      name: "Free",
+      desc: "Try Toolmey with a small daily limit.",
+      amount: 0,
+      limit: 5,
+      features: [
+        { ok: true,  text: "5 email sends per day" },
+        { ok: true,  text: "Lead Finder included" },
+        { ok: true,  text: "WhatsApp Bot preview" },
+        { ok: false, text: "Priority support" },
+        { ok: false, text: "Custom sender name" }
+      ]
+    },
+    {
+      id: "starter",
+      name: "Starter",
+      desc: "For freelancers and small businesses.",
+      amount: 2000,
+      limit: 50,
+      featured: true,
+      badge: "Most Popular",
+      features: [
+        { ok: true,  text: "50 email sends per day" },
+        { ok: true,  text: "Everything in Free" },
+        { ok: true,  text: "Custom sender name" },
+        { ok: true,  text: "Priority email support" },
+        { ok: false, text: "Team access" }
+      ]
+    },
+    {
+      id: "pro",
+      name: "Pro",
+      desc: "For agencies and growing businesses.",
+      amount: 5000,
+      limit: 200,
+      features: [
+        { ok: true,  text: "200 email sends per day" },
+        { ok: true,  text: "Everything in Starter" },
+        { ok: true,  text: "Priority support" },
+        { ok: true,  text: "Advanced templates" },
+        { ok: false, text: "Team access" }
+      ]
+    },
+    {
+      id: "business",
+      name: "Business",
+      desc: "For real businesses sending at scale.",
+      amount: 15000,
+      limit: 1000,
+      features: [
+        { ok: true,  text: "1,000 email sends per day" },
+        { ok: true,  text: "Everything in Pro" },
+        { ok: true,  text: "Team access (5 users)" },
+        { ok: true,  text: "Dedicated WhatsApp support" },
+        { ok: true,  text: "Custom integrations" }
+      ]
+    }
+  ];
+
+  var currentUser = null;
+  var currentPlan = "free";
+
+  var toastTimer = null;
+  function toast(msg, kind) {
+    $("toastMsg").textContent = msg;
+    $("toastIc").textContent = kind === "err" ? "!" : "OK";
+    $("toast").className = "toast on " + (kind || "ok");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () {
+      $("toast").className = "toast " + (kind || "ok");
+    }, 2400);
+  }
+
+  function setStatus(msg, kind) {
+    if (!msg) { $("status").className = "status"; $("status").textContent = ""; return; }
+    $("status").textContent = msg;
+    $("status").className = "status on " + (kind || "info");
+  }
+
+  function renderPlans() {
+    var box = $("plans");
+    box.innerHTML = "";
+
+    PLANS.forEach(function (p) {
+      var isCurrent = p.id === currentPlan;
+      var div = document.createElement("div");
+      div.className = "plan" + (p.featured ? " featured" : "") + (isCurrent ? " current" : "");
+
+      var badge = "";
+      if (isCurrent) {
+        badge = '<div class="plan-badge current-badge">Current plan</div>';
+      } else if (p.badge) {
+        badge = '<div class="plan-badge">' + p.badge + '</div>';
+      }
+
+      var priceHtml = p.amount === 0
+        ? '<div class="plan-price"><span class="amount">Free</span><span class="period">forever</span></div>'
+        : '<div class="plan-price"><span class="currency">N</span><span class="amount">' + p.amount.toLocaleString() + '</span><span class="period">/month</span></div>';
+
+      var features = p.features.map(function (f) {
+        return '<li>' +
+          '<span class="' + (f.ok ? 'check' : 'x') + '">' + (f.ok ? 'OK' : 'X') + '</span>' +
+          '<span class="' + (f.ok ? '' : 'muted') + '">' + f.text + '</span>' +
+        '</li>';
+      }).join("");
+
+      var btnHtml;
+      if (isCurrent) {
+        btnHtml = '<button class="plan-btn current-btn" disabled>Your current plan</button>';
+      } else if (p.id === "free") {
+        btnHtml = '<button class="plan-btn ghost" data-plan="free">Downgrade to Free</button>';
+      } else {
+        btnHtml = '<button class="plan-btn ' + (p.featured ? "primary" : "ghost") + '" data-plan="' + p.id + '">' +
+                  'Pay N' + p.amount.toLocaleString() + '</button>';
+      }
+
+      div.innerHTML =
+        badge +
+        '<div class="plan-head">' +
+          '<div class="plan-name">' + p.name + '</div>' +
+          '<div class="plan-desc">' + p.desc + '</div>' +
+        '</div>' +
+        priceHtml +
+        '<ul class="plan-features">' + features + '</ul>' +
+        btnHtml;
+
+      box.appendChild(div);
+    });
+
+    box.querySelectorAll("[data-plan]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        handlePlanClick(this.getAttribute("data-plan"));
+      });
+    });
+  }
+
+  async function handlePlanClick(planId) {
+    if (!currentUser) { toast("Please log in first", "err"); return; }
+    var plan = PLANS.find(function (p) { return p.id === planId; });
+    if (!plan) return;
+
+    if (planId === "free") {
+      if (!confirm("Downgrade to Free? You will lose your paid features.")) return;
+      await updatePlan("free");
+      return;
+    }
+    openPaystack(plan);
+  }
+
+  function openPaystack(plan) {
+    if (!window.PaystackPop) {
+      toast("Payment library still loading. Try again.", "err");
+      return;
+    }
+
+    var handler = PaystackPop.setup({
+      key: PAYSTACK_PUBLIC_KEY,
+      email: currentUser.email,
+      amount: plan.amount * 100,
+      currency: "NGN",
+      ref: "TME_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8),
+      metadata: {
+        user_id: currentUser.uid,
+        plan_id: plan.id,
+        plan_name: plan.name,
+        custom_fields: [
+          { display_name: "Plan", variable_name: "plan", value: plan.name },
+          { display_name: "User", variable_name: "user", value: currentUser.email }
+        ]
+      },
+      callback: function (response) {
+        verifyPayment(response.reference, plan);
+      },
+      onClose: function () {
+        setStatus("Payment cancelled. Nothing was charged.", "info");
+        setTimeout(function () { setStatus(""); }, 4000);
+      }
+    });
+
+    setStatus("Opening Paystack checkout...", "info");
+    handler.openIframe();
+  }
+
+  async function verifyPayment(reference, plan) {
+    setStatus("Verifying payment...", "info");
+    try {
+      var res = await fetch("/api/verify-payment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reference: reference, planId: plan.id, userId: currentUser.uid })
+      });
+      var data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "Payment verification failed");
+      }
+
+      await updatePlan(plan.id);
+      setStatus("Payment successful! Your " + plan.name + " plan is now active.", "ok");
+      toast("Welcome to " + plan.name + "!", "ok");
+      setTimeout(function () {
+        window.location.href = "dashboard.html";
+      }, 1800);
+    } catch (err) {
+      setStatus("We could not verify your payment: " + err.message + ". Contact support with reference " + reference, "err");
+      toast("Payment verification failed", "err");
+    }
+  }
+
+  async function updatePlan(planId) {
+    if (!currentUser) return;
+    var plan = PLANS.find(function (p) { return p.id === planId; });
+    if (!plan) return;
+
+    var userRef = doc(db, "users", currentUser.uid);
+    var until = null;
+    if (planId !== "free") {
+      until = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    }
+
+    try {
+      await setDoc(userRef, {
+        plan: planId,
+        dailyLimit: plan.limit,
+        planStartedAt: serverTimestamp(),
+        planExpiresAt: until,
+        lastUpdated: serverTimestamp()
+      }, { merge: true });
+
+      currentPlan = planId;
+      renderCurrentBanner();
+      renderPlans();
+    } catch (err) {
+      toast("Could not save plan: " + err.message, "err");
+    }
+  }
+
+  function renderCurrentBanner() {
+    var plan = PLANS.find(function (p) { return p.id === currentPlan; }) || PLANS[0];
+    $("currentBanner").style.display = "flex";
+    $("currentPlanName").textContent = plan.name + " Plan";
+    $("currentPlanInfo").textContent = plan.limit + " sends per day";
+  }
+
+  onAuthStateChanged(auth, async function (user) {
+    if (!user) {
+      window.location.href = "auth.html?next=pricing.html";
+      return;
+    }
+
+    currentUser = user;
+
+    try {
+      var snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) {
+        var data = snap.data();
+        currentPlan = data.plan || "free";
+      }
+    } catch (e) {
+      currentPlan = "free";
+    }
+
+    renderCurrentBanner();
+    renderPlans();
+    $("loading").classList.add("hidden");
+  });
+
+</script>
+</body>
+</html>

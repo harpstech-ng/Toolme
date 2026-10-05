@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bulk Mailer — Toolme</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f6f8fb;--card:#ffffff;--card-2:#f9fafb;--line:#e5e7eb;--line-strong:#d1d5db;
+    --text:#0f172a;--muted:#64748b;--dim:#94a3b8;
+    --blue:#2563eb;--blue-dark:#1d4ed8;--blue-light:#eff6ff;
+    --green:#16a34a;--green-light:#f0fdf4;--purple:#7c3aed;
+    --orange:#ea580c;--orange-light:#fff7ed;--red:#dc2626;--red-light:#fef2f2;--yellow:#ca8a04;
+  }
+  html,body{height:100%}
+  body{
+    background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:15px;line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    -webkit-text-size-adjust:100%;
+    padding-bottom:60px;
+    background-image:radial-gradient(circle at 100% 0%, rgba(37,99,235,.06) 0%, transparent 40%);
+    background-attachment:fixed;
+  }
+  .navbar{
+    background:rgba(255,255,255,.9);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+    padding:14px 20px;position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .back{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);
+    font-size:14px;font-weight:600}
+  .back:hover{color:var(--text)}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;
+    letter-spacing:-.3px;color:var(--text)}
+  .brand .mark{width:24px;height:24px;border-radius:7px;
+    background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:900;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+  .wrap{max-width:640px;margin:0 auto;padding:20px}
+  .step{background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .head{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+  .num{flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+    background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+    color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;
+    justify-content:center;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+  .head h2{font-size:16px;line-height:30px;font-weight:700;letter-spacing:-.2px}
+  .head p{font-size:13px;color:var(--muted);line-height:1.4;margin-top:-6px}
+  label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+  input,textarea,select{
+    width:100%;padding:13px 14px;
+    border:1.5px solid var(--line-strong);border-radius:10px;
+    font:inherit;font-size:15px;background:#fff;color:var(--text);
+    outline:none;transition:border-color .15s,box-shadow .15s;
+    -webkit-appearance:none;-moz-appearance:none;appearance:none;
+    border-radius:10px;
+  }
+  input:focus,textarea:focus,select:focus{
+    border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)
+  }
+  input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:var(--dim)}
+  input::placeholder,textarea::placeholder{color:var(--dim)}
+  textarea{resize:vertical;line-height:1.6;min-height:120px;font-family:inherit;
+    border-radius:10px}
+  select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 14px center;
+    padding-right:40px;
+  }
+  .mb{margin-bottom:14px}
+  .mb:last-child{margin-bottom:0}
+  button{font:inherit;font-weight:700;border:0;border-radius:10px;cursor:pointer;
+    transition:background .15s,transform .1s,opacity .15s;
+    -webkit-appearance:none;appearance:none;
+    -webkit-tap-highlight-color:transparent}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  button:active:not(:disabled){transform:scale(.98)}
+  .paste-zone{background:linear-gradient(135deg,var(--blue-light) 0%,#f5f3ff 100%);
+    border:1.5px solid #c7d2fe;border-radius:14px;padding:16px;margin-bottom:16px}
+  .paste-zone .label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .paste-zone .label-row .lbl{font-size:13.5px;font-weight:700;color:#3730a3;
+    display:flex;align-items:center;gap:6px}
+  .paste-zone .label-row .hint{font-size:11.5px;color:var(--muted);font-weight:600}
+  .paste-zone textarea{background:#fff;border-color:#c7d2fe;min-height:130px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:13.5px;line-height:1.7}
+  .paste-zone .btn-paste-add{width:100%;margin-top:10px;background:var(--blue);color:#fff;
+    padding:14px;font-size:14.5px;border-radius:10px;display:flex;align-items:center;
+    justify-content:center;gap:8px;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+  .paste-zone .btn-paste-add:disabled{background:#94a3b8;box-shadow:none}
+  .or-divider{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:12px;
+    font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:16px 0}
+  .or-divider::before,.or-divider::after{content:"";flex:1;height:1px;background:var(--line)}
+  .add-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:stretch}
+  .btn-add{background:var(--text);color:#fff;padding:0 20px;font-size:14px;
+    display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .chip-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  .chip{display:inline-flex;align-items:center;gap:8px;background:var(--blue-light);
+    border:1px solid #bfdbfe;border-radius:99px;padding:6px 6px 6px 14px;font-size:13.5px;
+    max-width:100%;color:#1e40af;font-weight:600}
+  .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+  .chip-x{width:22px;height:22px;border-radius:50%;background:#bfdbfe;color:#1e40af;
+    font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;
+    flex:0 0 auto;font-weight:700}
+  .empty{margin-top:14px;padding:22px 16px;text-align:center;font-size:13.5px;
+    color:var(--muted);border:1.5px dashed var(--line-strong);border-radius:12px;background:var(--card-2)}
+  .recip-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;
+    border-top:1px solid var(--line)}
+  .tool-btn{background:var(--card-2);border:1px solid var(--line);color:var(--muted);
+    padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;
+    display:flex;align-items:center;gap:5px}
+  .counter{margin-top:10px;font-size:13px;color:var(--muted);display:flex;
+    justify-content:space-between;flex-wrap:wrap;gap:8px}
+  .counter b{color:var(--text);font-weight:700}
+  .counter .dup{color:var(--yellow)}
+  .filter-box{position:relative;margin-top:10px}
+  .filter-box input{padding-left:36px;font-size:14px;background:var(--card-2)}
+  .filter-box .icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+    color:var(--dim);font-size:14px;pointer-events:none}
+  .meta-row{display:flex;justify-content:space-between;align-items:center;
+    font-size:12px;color:var(--muted);margin-top:8px}
+  .meta-row .warn{color:var(--yellow);font-weight:600}
+  .template-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tpl-btn{background:var(--card-2);border:1px solid var(--line);color:var(--text);
+    padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;
+    display:inline-flex;align-items:center;gap:4px}
+  .tpl-btn.save{background:var(--green-light);border-color:#86efac;color:#166534}
+  .tpl-btn.del{background:var(--red-light);border-color:#fecaca;color:#991b1b;padding:7px 9px}
+  .send-btn{width:100%;background:var(--blue);color:#fff;padding:17px;font-size:16px;
+    font-weight:800;border-radius:14px;margin-bottom:10px;
+    box-shadow:0 4px 16px rgba(37,99,235,.25);display:flex;align-items:center;
+    justify-content:center;gap:8px}
+  .send-btn.sending{background:var(--muted);box-shadow:none}
+  .test-btn{width:100%;background:var(--card);color:var(--text);
+    border:1.5px solid var(--line-strong);padding:14px;font-size:14px;
+    border-radius:12px;margin-bottom:14px}
+  .preview-btn{background:transparent;border:1px solid var(--line);color:var(--muted);
+    padding:7px 12px;border-radius:8px;font-size:12px;font-weight:600;
+    display:inline-flex;align-items:center;gap:5px}
+  .schedule-box{background:var(--orange-light);border:1.5px solid #fed7aa;
+    border-radius:14px;padding:18px;margin-bottom:14px}
+  .schedule-box h3{font-size:14px;margin-bottom:12px;color:#9a3412;
+    display:flex;align-items:center;gap:8px;font-weight:700}
+  .sched-row{display:flex;gap:8px;align-items:stretch}
+  @media (max-width:520px){.sched-row{flex-direction:column}}
+  .sched-row input{flex:1;background:#fff}
+  .btn-sched{background:var(--orange);color:#fff;padding:0 20px;font-size:14px;
+    display:flex;align-items:center;gap:6px;white-space:nowrap}
+  @media (max-width:520px){.btn-sched{padding:14px 20px}}
+  .sched-list{margin-top:14px}
+  .sched-item{display:flex;justify-content:space-between;align-items:center;
+    padding:11px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;
+    margin-bottom:8px;font-size:13px;gap:10px}
+  .sched-item .info{flex:1;min-width:0}
+  .sched-item .info b{display:block;font-size:13.5px;margin-bottom:1px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sched-item .info span{color:var(--muted);font-size:12px}
+  .sched-item .cancel{background:var(--red-light);color:#991b1b;border:1px solid #fecaca;
+    padding:6px 11px;border-radius:6px;font-size:12px}
+  .no-sched{font-size:12.5px;color:var(--muted);padding:10px 0;text-align:center}
+  .progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;
+    margin-top:12px;display:none}
+  .progress.on{display:block}
+  .progress span{display:block;height:100%;width:35%;
+    background:linear-gradient(90deg,var(--blue) 0%,var(--purple) 100%);
+    border-radius:99px;animation:slide 1.2s ease-in-out infinite}
+  @keyframes slide{
+    0%{transform:translateX(-100%)}
+    100%{transform:translateX(330%)}
+  }
+  .status{margin-top:12px;padding:14px 16px;border-radius:12px;font-size:14px;
+    display:none;line-height:1.5;border:1px solid transparent}
+  .status.on{display:block}
+  .status.info{background:var(--blue-light);color:#1e40af;border-color:#bfdbfe}
+  .status.err{background:var(--red-light);color:#991b1b;border-color:#fecaca}
+  .status.ok{background:var(--green-light);color:#166534;border-color:#86efac}
+  .results{display:none;margin-top:14px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .results.on{display:block}
+  .results-head{display:flex;padding:14px 16px;border-bottom:1px solid var(--line);gap:8px}
+  .stat-pill{flex:1;text-align:center;padding:10px 8px;background:var(--card-2);border-radius:10px}
+  .stat-pill .n{font-size:22px;font-weight:800;line-height:1}
+  .stat-pill .l{font-size:11px;color:var(--muted);margin-top:4px;
+    text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+  .stat-pill.ok .n{color:var(--green)}
+  .stat-pill.no .n{color:var(--red)}
+  .results-list{max-height:280px;overflow-y:auto;
+    -webkit-overflow-scrolling:touch}
+  .r{display:flex;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line);
+    font-size:13.5px;align-items:center;word-break:break-all}
+  .r:last-child{border-bottom:0}
+  .r .ic{flex:0 0 auto;font-weight:800;font-size:15px}
+  .r.ok .ic{color:var(--green)}
+  .r.no .ic{color:var(--red)}
+  .r .txt{flex:1;min-width:0}
+  .r .why{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+  .results-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+    padding:12px 16px;border-top:1px solid var(--line)}
+  .results-actions button{background:var(--card-2);border:1px solid var(--line);
+    color:var(--text);padding:11px;font-size:12.5px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;gap:6px}
+  .modal{position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(15,23,42,.5);z-index:200;
+    display:none;align-items:flex-end;justify-content:center;
+    -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+  .modal.on{display:flex}
+  .modal-content{background:var(--card);width:100%;max-width:640px;max-height:90vh;
+    border-radius:16px 16px 0 0;overflow:hidden;display:flex;flex-direction:column;
+    box-shadow:0 -10px 40px rgba(15,23,42,.2)}
+  .modal-head{padding:16px 20px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
+  .modal-head h3{font-size:15px;font-weight:700}
+  .modal-close{background:transparent;border:0;color:var(--muted);font-size:24px;
+    padding:0;width:32px;height:32px;cursor:pointer;line-height:1;
+    -webkit-appearance:none;appearance:none}
+  .modal-body{overflow-y:auto;flex:1;padding:0;
+    -webkit-overflow-scrolling:touch}
+  .preview-meta{padding:14px 20px;background:var(--card-2);
+    border-bottom:1px solid var(--line);font-size:13px}
+  .preview-meta .row{margin-bottom:8px}
+  .preview-meta .k{color:var(--muted);font-size:10.5px;text-transform:uppercase;
+    letter-spacing:.7px;font-weight:700;margin-bottom:2px}
+  .preview-meta .v{color:var(--text);word-break:break-word;font-weight:500}
+  .preview-frame{padding:22px;font-size:14px;line-height:1.7;background:#fff;
+    color:#111;margin:20px;border-radius:10px;border:1px solid var(--line)}
+  .preview-frame p{margin:0 0 12px}
+  .toast{position:fixed;bottom:24px;left:50%;
+    -webkit-transform:translateX(-50%) translateY(100px);
+    transform:translateX(-50%) translateY(100px);
+    background:var(--text);color:#fff;padding:12px 20px;border-radius:99px;
+    font-size:13.5px;font-weight:600;z-index:300;
+    -webkit-transition:-webkit-transform .3s cubic-bezier(.2,.8,.3,1);
+    transition:transform .3s cubic-bezier(.2,.8,.3,1);
+    box-shadow:0 10px 30px rgba(15,23,42,.25);
+    display:flex;align-items:center;gap:8px;max-width:calc(100% - 40px)}
+  .toast.on{-webkit-transform:translateX(-50%) translateY(0);
+    transform:translateX(-50%) translateY(0)}
+  .toast.ok .ic{color:#4ade80}
+  .toast.err .ic{color:#f87171}
+  .hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="back">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back
+  </a>
+  <div class="brand"><div class="mark">T</div>Bulk Mailer</div>
+</nav>
+
+<div class="wrap">
+
+  <div class="step">
+    <div class="head">
+      <div class="num">1</div>
+      <div><h2>Who is this from?</h2><p>Your name and email as your customers will see it.</p></div>
+    </div>
+    <div class="mb">
+      <label for="senderName">Your name or business name</label>
+      <input type="text" id="senderName" placeholder="e.g. Harps Tech" autocomplete="off">
+    </div>
+    <div class="mb">
+      <label for="senderEmail">Your email address</label>
+      <input type="text" id="senderEmail" inputmode="email" placeholder="hello@yourdomain.com" autocomplete="off">
+      <p style="font-size:12.5px;color:var(--muted);margin-top:6px">Must be a verified sender in your Brevo account.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="head">
+      <div class="num">2</div>
+      <div><h2>Who are you sending to?</h2><p>Paste your whole list at once — one per line or comma-separated.</p></div>
+    </div>
+
+    <div class="paste-zone">
+      <div class="label-row">
+        <div class="lbl"><span>📋</span> Paste your emails here</div>
+        <div class="hint" id="pasteCounter">0 emails ready</div>
+      </div>
+      <textarea id="pasteArea" placeholder="ada@example.com&#10;chidi@example.com&#10;tunde@example.com" spellcheck="false"></textarea>
+      <button class="btn-paste-add" id="btnPasteAdd" type="button" disabled>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Add all of them
+      </button>
+    </div>
+
+    <div class="or-divider">or add one at a time</div>
+
+    <div class="add-row">
+      <input type="text" id="newEmail" inputmode="email" placeholder="customer@email.com" autocomplete="off">
+      <button class="btn-add" id="btnAdd" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        Add
+      </button>
+    </div>
+
+    <div class="chip-list" id="chips"></div>
+    <div class="empty" id="empty">No one added yet — paste your emails above</div>
+
+    <div id="recipControls" class="hidden">
+      <div class="filter-box">
+        <span class="icon">🔍</span>
+        <input type="text" id="filterInput" placeholder="Search your list..." autocomplete="off">
+      </div>
+      <div class="recip-tools">
+        <button class="tool-btn" id="btnCopyAll" type="button"><span>📋</span>Copy all</button>
+        <button class="tool-btn" id="btnCsvImport" type="button"><span>📥</span>Import CSV</button>
+        <button class="tool-btn" id="btnCsvExport" type="button"><span>📤</span>Export list</button>
+        <button class="tool-btn" id="btnClearAll" type="button"><span>🗑️</span>Clear all</button>
+        <input type="file" id="csvFile" accept=".csv,.txt,text/csv,text/plain" hidden>
+      </div>
+      <div class="counter">
+        <span><b id="countValid">0</b> valid emails</span>
+        <span id="dupeInfo" class="hidden">• <span class="dup"><b id="countDupes">0</b> duplicates skipped</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="head">
+      <div class="num">3</div>
+      <div><h2>Subject</h2><p>This is the line they see before opening.</p></div>
+    </div>
+    <input type="text" id="subject" placeholder="e.g. New stock just arrived" autocomplete="off" maxlength="200">
+    <div class="meta-row">
+      <span id="subjectHint">Keep it short and clear</span>
+      <span id="subjectCount">0 chars</span>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="head">
+      <div class="num">4</div>
+      <div><h2>Write your message</h2><p>Type normally. Blank lines become paragraphs.</p></div>
+    </div>
+    <div class="template-row" id="templateRow"></div>
+    <textarea id="body" spellcheck="false" placeholder="Hi,&#10;&#10;I wanted to let you know...&#10;&#10;Thanks,&#10;Your Name"></textarea>
+    <div class="meta-row">
+      <button class="preview-btn" id="btnPreview" type="button"><span>👁️</span> Preview</button>
+      <span id="bodyCount">0 chars</span>
+    </div>
+  </div>
+
+  <button class="send-btn" id="btnSend" disabled>
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    <span id="btnSendText">Send to 0 people</span>
+  </button>
+  <button class="test-btn" id="btnTest" type="button">✉️ Send one test to myself first</button>
+
+  <div class="schedule-box">
+    <h3><span>⏰</span> Schedule for later</h3>
+    <div class="sched-row">
+      <input type="datetime-local" id="scheduleTime">
+      <button class="btn-sched" id="btnSchedule" type="button" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        Schedule
+      </button>
+    </div>
+    <p style="font-size:12.5px;color:#9a3412;margin-top:10px;line-height:1.5">
+      Keep this page open so it can fire. If you close it, it catches up when you come back.
+    </p>
+    <div class="sched-list" id="schedList"></div>
+  </div>
+
+  <div class="progress" id="progress"><span></span></div>
+  <div class="status" id="status"></div>
+
+  <div class="results" id="results">
+    <div class="results-head">
+      <div class="stat-pill ok"><div class="n" id="statSent">0</div><div class="l">Delivered</div></div>
+      <div class="stat-pill no"><div class="n" id="statFailed">0</div><div class="l">Failed</div></div>
+    </div>
+    <div class="results-list" id="resultsList"></div>
+    <div class="results-actions">
+      <button id="btnExportResults" type="button"><span>📊</span>Export report</button>
+      <button id="btnRetryFailed" type="button"><span>🔁</span>Retry failed</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal" id="previewModal">
+  <div class="modal-content">
+    <div class="modal-head">
+      <h3>Preview</h3>
+      <button class="modal-close" id="btnClosePreview" type="button">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="preview-meta">
+        <div class="row"><div class="k">From</div><div class="v" id="pvFrom">—</div></div>
+        <div class="row"><div class="k">Subject</div><div class="v" id="pvSubject">—</div></div>
+        <div class="row"><div class="k">Sample recipient</div><div class="v" id="pvTo">—</div></div>
+      </div>
+      <div class="preview-frame" id="pvBody">Nothing to preview yet</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span class="ic" id="toastIc">✓</span>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var EP_A = "https://bulk-email-sender--okugbepraise";
+  var EP_B = ".replit.app";
+  var EP_C = "/api/send";
+  var ENDPOINT = EP_A + EP_B + EP_C;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  var KEY = "bulkmailer.v2";
+  var SCHEDULE_KEY = "bulkmailer.schedules.v1";
+  var TPL_KEY = "toolme.templates.v1";
+
+  var people = [];
+  var sending = false;
+  var schedules = [];
+  var checkTimer = null;
+  var templates = [];
+  var lastResults = null;
+  var visibleFilter = "";
+
+  var els = {
+    senderName:$("senderName"),senderEmail:$("senderEmail"),newEmail:$("newEmail"),
+    btnAdd:$("btnAdd"),pasteArea:$("pasteArea"),btnPasteAdd:$("btnPasteAdd"),
+    pasteCounter:$("pasteCounter"),chips:$("chips"),empty:$("empty"),
+    subject:$("subject"),body:$("body"),btnSend:$("btnSend"),btnSendText:$("btnSendText"),
+    btnTest:$("btnTest"),btnSchedule:$("btnSchedule"),scheduleTime:$("scheduleTime"),
+    schedList:$("schedList"),status:$("status"),progress:$("progress"),
+    results:$("results"),resultsList:$("resultsList"),statSent:$("statSent"),statFailed:$("statFailed")
+  };
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function setStatus(msg, kind) {
+    if (!msg) { els.status.className = "status"; els.status.textContent = ""; return; }
+    els.status.textContent = msg;
+    els.status.className = "status on " + (kind || "info");
+  }
+
+  var toastTimer = null;
+  function toast(msg, kind) {
+    $("toastMsg").textContent = msg;
+    $("toastIc").textContent = kind === "err" ? "!" : "✓";
+    $("toast").className = "toast on " + (kind || "ok");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { $("toast").className = "toast " + (kind || "ok"); }, 2400);
+  }
+
+  function toHtml(text) {
+    var s = String(text);
+    if (/<(p|br|div|h[1-6]|ul|ol|li|a|strong|em|b|i)\b[^>]*>/i.test(s)) return s;
+    s = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var paras = s.split(/\n\s*\n/);
+    return paras.map(function (p) { return "<p>" + p.replace(/\n/g, "<br>") + "</p>"; }).join("");
+  }
+
+  // PEOPLE — no name field, ever
+  function addPerson(email) {
+    email = String(email || "").trim().toLowerCase();
+    if (!EMAIL.test(email)) return "invalid";
+    for (var i = 0; i < people.length; i++) {
+      if (people[i].email === email) return "dupe";
+    }
+    people.push({ email: email });
+    return "added";
+  }
+
+  function addMany(text) {
+    var parts = String(text).split(/[\s,;]+/);
+    var added = 0, dupes = 0, invalid = 0;
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i].trim();
+      if (!p) continue;
+      var r = addPerson(p);
+      if (r === "added") added++;
+      else if (r === "dupe") dupes++;
+      else invalid++;
+    }
+    return { added: added, dupes: dupes, invalid: invalid };
+  }
+
+  function countFromPaste() {
+    var parts = String(els.pasteArea.value).split(/[\s,;]+/);
+    var n = 0, seen = {};
+    for (var i = 0; i < parts.length; i++) {
+      var p = parts[i].trim().toLowerCase();
+      if (!p || !EMAIL.test(p)) continue;
+      if (seen[p]) continue;
+      seen[p] = true; n++;
+    }
+    return n;
+  }
+
+  function removePerson(email) {
+    people = people.filter(function (p) { return p.email !== email; });
+    render();
+  }
+
+  function render() {
+    renderChips(); renderCounter(); renderButtons(); renderSchedules(); save();
+  }
+
+  function renderChips() {
+    var list = els.chips;
+    list.innerHTML = "";
+    var shown = visibleFilter
+      ? people.filter(function (p) { return p.email.indexOf(visibleFilter.toLowerCase()) !== -1; })
+      : people;
+    shown.forEach(function (p) {
+      var c = document.createElement("div");
+      c.className = "chip";
+      c.innerHTML = "<span>" + esc(p.email) + "</span>";
+      var x = document.createElement("button");
+      x.className = "chip-x"; x.type = "button"; x.innerHTML = "&times;";
+      x.onclick = function () { removePerson(p.email); };
+      c.appendChild(x); list.appendChild(c);
+    });
+    els.empty.style.display = people.length ? "none" : "block";
+    var ctrl = $("recipControls");
+    if (people.length) ctrl.classList.remove("hidden");
+    else ctrl.classList.add("hidden");
+  }
+
+  function renderCounter() {
+    $("countValid").textContent = people.length;
+    var dupes = 0;
+    els.newEmail.value.split(/[\s,;]+/).forEach(function (e) {
+      e = e.trim().toLowerCase();
+      if (e && people.some(function (p) { return p.email === e; })) dupes++;
+    });
+    var di = $("dupeInfo");
+    if (dupes) { $("countDupes").textContent = dupes; di.classList.remove("hidden"); }
+    else di.classList.add("hidden");
+  }
+
+  function renderButtons() {
+    var n = people.length;
+    els.btnSend.disabled = sending || n === 0;
+    els.btnSendText.textContent = sending ? "Sending..." : "Send to " + n + " " + (n === 1 ? "person" : "people");
+    els.btnSend.className = "send-btn" + (sending ? " sending" : "");
+    els.btnSchedule.disabled = sending || n === 0 || !els.scheduleTime.value;
+
+    var sLen = els.subject.value.length;
+    $("subjectCount").textContent = sLen + " chars";
+    var hint = $("subjectHint");
+    if (sLen === 0) { hint.textContent = "Keep it short and clear"; hint.className = ""; }
+    else if (sLen < 30) { hint.textContent = "Good length"; hint.className = ""; }
+    else if (sLen <= 60) { hint.textContent = "Perfect"; hint.className = ""; }
+    else { hint.textContent = "Too long for mobile — try under 60"; hint.className = "warn"; }
+    $("bodyCount").textContent = els.body.value.length + " chars";
+  }
+
+  function updatePasteUI() {
+    var n = countFromPaste();
+    els.pasteCounter.textContent = n + (n === 1 ? " email ready" : " emails ready");
+    els.btnPasteAdd.disabled = n === 0;
+  }
+
+  els.pasteArea.addEventListener("input", updatePasteUI);
+  els.pasteArea.addEventListener("paste", function () { setTimeout(updatePasteUI, 0); });
+
+  // templates
+  function loadTemplates() {
+    try { templates = JSON.parse(localStorage.getItem(TPL_KEY) || "[]"); } catch (e) { templates = []; }
+    renderTemplates();
+  }
+  function saveTemplates() {
+    try { localStorage.setItem(TPL_KEY, JSON.stringify(templates)); } catch (e) {}
+    renderTemplates();
+  }
+  function renderTemplates() {
+    var row = $("templateRow");
+    row.innerHTML = "";
+    templates.slice(0, 5).forEach(function (t, i) {
+      var wrapper = document.createElement("div");
+      wrapper.style.display = "inline-flex";
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "tpl-btn"; b.textContent = "📄 " + t.name;
+      b.onclick = function () {
+        els.subject.value = t.subject || ""; els.body.value = t.body || "";
+        renderButtons(); toast("Loaded \"" + t.name + "\"", "ok");
+      };
+      var del = document.createElement("button");
+      del.type = "button"; del.className = "tpl-btn del"; del.textContent = "×";
+      del.style.marginLeft = "4px";
+      del.onclick = function (e) {
+        e.stopPropagation();
+        if (!confirm("Delete template \"" + t.name + "\"?")) return;
+        templates.splice(i, 1); saveTemplates();
+      };
+      wrapper.appendChild(b); wrapper.appendChild(del); row.appendChild(wrapper);
+    });
+    var save = document.createElement("button");
+    save.type = "button"; save.className = "tpl-btn save"; save.textContent = "+ Save template";
+    save.onclick = function () {
+      if (!els.subject.value.trim() && !els.body.value.trim()) { toast("Write something first", "err"); return; }
+      var name = prompt("Name this template:", "My message");
+      if (!name) return;
+      templates.unshift({ name: name.slice(0, 20), subject: els.subject.value, body: els.body.value });
+      if (templates.length > 10) templates = templates.slice(0, 10);
+      saveTemplates(); toast("Saved", "ok");
+    };
+    row.appendChild(save);
+  }
+
+  // schedules
+  function loadSchedules() {
+    try { schedules = JSON.parse(localStorage.getItem(SCHEDULE_KEY) || "[]"); } catch (e) { schedules = []; }
+  }
+  function saveSchedules() {
+    try { localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedules)); } catch (e) {}
+  }
+  function scheduleSend() {
+    var problem = problems();
+    if (problem) { setStatus(problem, "err"); return; }
+    var val = els.scheduleTime.value;
+    if (!val) { setStatus("Pick a date and time first.", "err"); return; }
+    var sendAt = new Date(val).getTime();
+    if (isNaN(sendAt)) { setStatus("That date is not valid.", "err"); return; }
+    if (sendAt <= Date.now()) { setStatus("Pick a time in the future.", "err"); return; }
+    schedules.push({
+      id: "sch_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+      sendAt: sendAt,
+      senderName: els.senderName.value.trim(),
+      senderEmail: els.senderEmail.value.trim(),
+      subject: els.subject.value.trim(),
+      html: els.body.value,
+      recipients: people.slice()
+    });
+    saveSchedules(); renderSchedules();
+    toast("Scheduled for " + new Date(sendAt).toLocaleString(), "ok");
+    els.scheduleTime.value = ""; renderButtons(); startChecker();
+  }
+  function cancelSchedule(id) {
+    schedules = schedules.filter(function (s) { return s.id !== id; });
+    saveSchedules(); renderSchedules(); toast("Cancelled", "ok");
+    if (!schedules.length) stopChecker();
+  }
+  function renderSchedules() {
+    if (!schedules.length) { els.schedList.innerHTML = "<div class='no-sched'>Nothing scheduled</div>"; return; }
+    els.schedList.innerHTML = "";
+    schedules.slice().sort(function (a, b) { return a.sendAt - b.sendAt; }).forEach(function (s) {
+      var d = new Date(s.sendAt);
+      var div = document.createElement("div");
+      div.className = "sched-item";
+      div.innerHTML = "<div class='info'><b>" + esc(s.subject || "(no subject)") + "</b>" +
+        "<span>" + esc(d.toLocaleString()) + " · " + s.recipients.length + " recipient" +
+        (s.recipients.length === 1 ? "" : "s") + "</span></div>" +
+        "<button class='cancel' type='button'>Cancel</button>";
+      div.querySelector(".cancel").onclick = function () { cancelSchedule(s.id); };
+      els.schedList.appendChild(div);
+    });
+  }
+  function startChecker() {
+    if (checkTimer) return;
+    checkTimer = setInterval(checkSchedules, 15000); checkSchedules();
+  }
+  function stopChecker() {
+    if (checkTimer) { clearInterval(checkTimer); checkTimer = null; }
+  }
+  async function checkSchedules() {
+    if (sending) return;
+    var now = Date.now();
+    var due = schedules.filter(function (s) { return s.sendAt <= now; });
+    if (!due.length) { if (!schedules.length) stopChecker(); return; }
+    for (var i = 0; i < due.length; i++) {
+      var s = due[i];
+      schedules = schedules.filter(function (x) { return x.id !== s.id; });
+      saveSchedules(); renderSchedules();
+      setStatus("Sending scheduled: \"" + s.subject + "\"", "info");
+      await sendTo(s.recipients, s.subject, s.html, s.senderName, s.senderEmail);
+    }
+    if (!schedules.length) stopChecker();
+  }
+
+  function problems() {
+    if (!els.senderName.value.trim()) return "Fill in your name or business name (Step 1).";
+    if (!EMAIL.test(els.senderEmail.value.trim())) return "Enter a valid sender email (Step 1).";
+    if (!people.length) return "Add at least one recipient (Step 2).";
+    if (!els.subject.value.trim()) return "Write a subject (Step 3).";
+    if (!els.body.value.trim()) return "Write your message (Step 4).";
+    return null;
+  }
+
+  // SEND — recipients are pure { email }
+  async function sendTo(list, customSubject, customBody, customSenderName, customSenderEmail) {
+    sending = true;
+    els.results.className = "results";
+    els.progress.className = "progress on";
+    setStatus("Sending to " + list.length + (list.length === 1 ? " person..." : " people...") + " This can take a few minutes.", "info");
+    renderButtons();
+
+    var cleanList = list.map(function (r) { return { email: r.email }; });
+
+    var rawBody = customBody || els.body.value;
+    var senderName = customSenderName || els.senderName.value.trim();
+    var senderEmail = customSenderEmail || els.senderEmail.value.trim();
+    var subject = customSubject || els.subject.value.trim();
+
+    try {
+      var res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          senderName: senderName,
+          senderEmail: senderEmail,
+          subject: subject,
+          html: toHtml(rawBody),
+          recipients: cleanList
+        })
+      });
+
+      var text = await res.text();
+      if (!res.ok) {
+        if (res.status === 404) throw new Error("Could not find the server.");
+        if (res.status === 401 || res.status === 403) throw new Error("Server rejected the request. Check Brevo settings.");
+        if (res.status === 429) throw new Error("Too many emails too fast. Wait a few minutes.");
+        throw new Error("Server error " + res.status + ". " + text.slice(0, 120));
+      }
+
+      var data;
+      try { data = JSON.parse(text); } catch (e) { throw new Error("Server returned unexpected data."); }
+
+      var sent = data.sent || [];
+      var failed = data.failed || [];
+      lastResults = { sent: sent, failed: failed };
+      showResults(sent, failed);
+
+      if (failed.length) setStatus("Done. " + sent.length + " delivered, " + failed.length + " failed.", "err");
+      else setStatus("All " + sent.length + " delivered successfully.", "ok");
+      toast("Sent " + sent.length + (failed.length ? ", " + failed.length + " failed" : ""), failed.length ? "err" : "ok");
+    } catch (err) {
+      var msg = err && err.message ? err.message : String(err);
+      if (/Failed to fetch|NetworkError|load failed/i.test(msg)) msg = "Could not reach the server. Is the backend awake?";
+      setStatus(msg, "err"); toast("Send failed", "err");
+    } finally {
+      sending = false;
+      els.progress.className = "progress";
+      renderButtons();
+    }
+  }
+
+  function showResults(sent, failed) {
+    els.statSent.textContent = sent.length;
+    els.statFailed.textContent = failed.length;
+    var html = "";
+    failed.forEach(function (f) {
+      html += "<div class='r no'><span class='ic'>×</span><div class='txt'>" + esc(f.email) +
+              "<span class='why'>" + esc(f.error || "Failed") + "</span></div></div>";
+    });
+    sent.forEach(function (e) {
+      html += "<div class='r ok'><span class='ic'>✓</span><div class='txt'>" + esc(e) + "</div></div>";
+    });
+    els.resultsList.innerHTML = html;
+    els.results.className = "results on";
+  }
+
+  function tryAddFromInputs() {
+    var raw = els.newEmail.value.trim();
+    if (!raw) return;
+    var r = addMany(raw);
+    els.newEmail.value = ""; els.newEmail.focus();
+    if (r.added) {
+      var msg = "Added " + r.added + (r.added === 1 ? " email" : " emails");
+      if (r.dupes) msg += " · " + r.dupes + " skipped";
+      if (r.invalid) msg += " · " + r.invalid + " invalid";
+      toast(msg, "ok");
+    } else if (r.dupes && !r.invalid) toast("Already on the list", "err");
+    else if (r.invalid) toast("Not a valid email", "err");
+    render();
+  }
+
+  els.btnAdd.addEventListener("click", tryAddFromInputs);
+  els.newEmail.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); tryAddFromInputs(); }
+  });
+
+  els.btnPasteAdd.addEventListener("click", function () {
+    var r = addMany(els.pasteArea.value);
+    els.pasteArea.value = ""; updatePasteUI(); render();
+    if (r.added) {
+      var msg = "Added " + r.added + (r.added === 1 ? " email" : " emails");
+      if (r.dupes) msg += " · " + r.dupes + " skipped";
+      if (r.invalid) msg += " · " + r.invalid + " invalid";
+      toast(msg, "ok");
+    } else if (r.dupes) toast("All already on the list", "err");
+    else toast("No valid emails found", "err");
+  });
+
+  $("filterInput").addEventListener("input", function () { visibleFilter = this.value; renderChips(); });
+
+  $("btnClearAll").addEventListener("click", function () {
+    if (!people.length) return;
+    if (!confirm("Remove all " + people.length + " recipients?")) return;
+    people = []; visibleFilter = ""; $("filterInput").value = ""; render(); toast("Cleared", "ok");
+  });
+
+  $("btnCopyAll").addEventListener("click", function () {
+    if (!people.length) { toast("Nothing to copy", "err"); return; }
+    copyText(people.map(function (p) { return p.email; }).join("\n"));
+    toast("Copied " + people.length + " emails", "ok");
+  });
+
+  $("btnCsvImport").addEventListener("click", function () { $("csvFile").click(); });
+  $("csvFile").addEventListener("change", function (e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var r = addMany(String(reader.result));
+      render();
+      toast("Imported " + r.added + " new", r.added ? "ok" : "err");
+    };
+    reader.readAsText(file); e.target.value = "";
+  });
+
+  $("btnCsvExport").addEventListener("click", function () {
+    if (!people.length) return;
+    var csv = "email\n" + people.map(function (p) { return p.email; }).join("\n");
+    downloadBlob(csv, "recipients-" + Date.now() + ".csv", "text/csv");
+    toast("Exported list", "ok");
+  });
+
+  function downloadBlob(content, filename, type) {
+    var blob = new Blob([content], { type: type + ";charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = filename;
+    a.click(); URL.revokeObjectURL(a.href);
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText)
+      navigator.clipboard.writeText(text).catch(function () { fallbackCopy(text); });
+    else fallbackCopy(text);
+  }
+  function fallbackCopy(text) {
+    var t = document.createElement("textarea");
+    t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+    document.body.appendChild(t); t.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(t);
+  }
+
+  ["senderName", "senderEmail", "subject", "body"].forEach(function (id) {
+    $(id).addEventListener("input", function () {
+      if (els.status.className.indexOf("err") > -1) setStatus("");
+      renderButtons(); save();
+    });
+  });
+
+  $("btnPreview").addEventListener("click", function () {
+    $("pvFrom").textContent = (els.senderName.value.trim() || "—") + " <" + (els.senderEmail.value.trim() || "—") + ">";
+    $("pvSubject").textContent = els.subject.value.trim() || "(no subject)";
+    $("pvTo").textContent = people[0] ? people[0].email : "(no recipients yet)";
+    var html = toHtml(els.body.value);
+    if (people[0]) html = html.replace(/\{\{\s*email\s*\}\}/gi, people[0].email);
+    $("pvBody").innerHTML = html || "<p style='color:#999'>Nothing to preview yet</p>";
+    $("previewModal").className = "modal on";
+  });
+  $("btnClosePreview").addEventListener("click", function () { $("previewModal").className = "modal"; });
+  $("previewModal").addEventListener("click", function (e) {
+    if (e.target === this) this.className = "modal";
+  });
+
+  els.scheduleTime.addEventListener("change", renderButtons);
+
+  els.btnSend.addEventListener("click", function () {
+    var problem = problems();
+    if (problem) { setStatus(problem, "err"); toast(problem, "err"); return; }
+    if (!confirm("Send this message to " + people.length + " " + (people.length === 1 ? "person" : "people") + "?")) return;
+    sendTo(people.slice());
+  });
+
+  els.btnSchedule.addEventListener("click", scheduleSend);
+
+  els.btnTest.addEventListener("click", function () {
+    var me = els.senderEmail.value.trim();
+    if (!EMAIL.test(me)) { setStatus("Fill in your own email in Step 1 first.", "err"); return; }
+    if (!els.senderName.value.trim()) { setStatus("Fill in your name (Step 1).", "err"); return; }
+    if (!els.subject.value.trim()) { setStatus("Write a subject (Step 3).", "err"); return; }
+    if (!els.body.value.trim()) { setStatus("Write your message (Step 4).", "err"); return; }
+    sendTo([{ email: me }]);
+  });
+
+  $("btnExportResults").addEventListener("click", function () {
+    if (!lastResults) return;
+    var rows = [["email", "status", "detail"]];
+    lastResults.sent.forEach(function (e) { rows.push([e, "sent", ""]); });
+    lastResults.failed.forEach(function (f) { rows.push([f.email, "failed", f.error || ""]); });
+    var csv = rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c == null ? "" : c);
+        return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(",");
+    }).join("\n");
+    downloadBlob(csv, "send-report-" + Date.now() + ".csv", "text/csv");
+    toast("Report downloaded", "ok");
+  });
+
+  $("btnRetryFailed").addEventListener("click", function () {
+    if (!lastResults || !lastResults.failed.length) { toast("Nothing to retry", "err"); return; }
+    var retry = lastResults.failed.map(function (f) { return { email: f.email }; });
+    if (!confirm("Retry sending to " + retry.length + " failed addresses?")) return;
+    sendTo(retry);
+  });
+
+  var t = null;
+  function save() {
+    clearTimeout(t);
+    t = setTimeout(function () {
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          senderName: els.senderName.value,
+          senderEmail: els.senderEmail.value,
+          subject: els.subject.value,
+          body: els.body.value,
+          people: people
+        }));
+      } catch (e) {}
+    }, 300);
+  }
+
+  function load() {
+    var raw;
+    try { raw = localStorage.getItem(KEY); } catch (e) { return; }
+    if (!raw) return;
+    try {
+      var d = JSON.parse(raw);
+      if (d.senderName) els.senderName.value = d.senderName;
+      if (d.senderEmail) els.senderEmail.value = d.senderEmail;
+      if (d.subject) els.subject.value = d.subject;
+      if (d.body) els.body.value = d.body;
+      if (Array.isArray(d.people)) {
+        people = d.people.filter(function (p) {
+          return p && typeof p.email === "string" && EMAIL.test(p.email);
+        }).map(function (p) { return { email: p.email }; });
+      }
+    } catch (e) {}
+  }
+
+  load(); loadSchedules(); loadTemplates(); render(); renderButtons(); updatePasteUI();
+  if (schedules.length) startChecker();
+})();
+</script>
+</body>
+</html>

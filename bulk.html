@@ -3,188 +3,299 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bulk Mailer — Toolme</title>
+<title>Bulk Mailer - Toolmey</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   :root{
     --bg:#f6f8fb;--card:#ffffff;--card-2:#f9fafb;--line:#e5e7eb;--line-strong:#d1d5db;
     --text:#0f172a;--muted:#64748b;--dim:#94a3b8;
     --blue:#2563eb;--blue-dark:#1d4ed8;--blue-light:#eff6ff;
-    --green:#16a34a;--green-light:#f0fdf4;--purple:#7c3aed;
-    --orange:#ea580c;--orange-light:#fff7ed;--red:#dc2626;--red-light:#fef2f2;--yellow:#ca8a04;
+    --green:#16a34a;--green-dark:#15803d;--green-light:#f0fdf4;
+    --purple:#7c3aed;--purple-light:#f5f3ff;
+    --orange:#ea580c;--orange-light:#fff7ed;
+    --red:#dc2626;--red-light:#fef2f2;--yellow:#ca8a04;
   }
   html,body{height:100%}
-  body{
-    background:var(--bg);color:var(--text);
+  body{background:var(--bg);color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     font-size:15px;line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    -webkit-text-size-adjust:100%;
+    -webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%;
     padding-bottom:60px;
     background-image:radial-gradient(circle at 100% 0%, rgba(37,99,235,.06) 0%, transparent 40%);
-    background-attachment:fixed;
-  }
-  .navbar{
-    background:rgba(255,255,255,.9);
-    -webkit-backdrop-filter:blur(14px);
-    backdrop-filter:blur(14px);
+    background-attachment:fixed}
+  .navbar{background:rgba(255,255,255,.9);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
     border-bottom:1px solid var(--line);
     padding:14px 20px;position:sticky;top:0;z-index:50;
-    display:flex;align-items:center;justify-content:space-between;
-  }
-  .back{display:flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);
-    font-size:14px;font-weight:600}
-  .back:hover{color:var(--text)}
-  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;
-    letter-spacing:-.3px;color:var(--text)}
+    display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .back{display:flex;align-items:center;gap:6px;text-decoration:none;
+    color:var(--muted);font-size:13.5px;font-weight:600;padding:6px 10px;
+    border-radius:8px}
+  .back:hover{background:var(--card-2);color:var(--text)}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;
+    font-size:14.5px;letter-spacing:-.3px;color:var(--text)}
   .brand .mark{width:24px;height:24px;border-radius:7px;
     background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
     display:flex;align-items:center;justify-content:center;
-    font-size:11px;font-weight:900;color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+    font-size:11px;font-weight:900;color:#fff;
+    box-shadow:0 2px 8px rgba(37,99,235,.3)}
+  .settings-btn{background:transparent;border:0;color:var(--muted);
+    font-size:13px;font-weight:700;padding:6px 10px;border-radius:8px;
+    cursor:pointer}
+  .settings-btn:hover{background:var(--card-2);color:var(--text)}
+
   .wrap{max-width:640px;margin:0 auto;padding:20px}
-  .step{background:var(--card);border:1px solid var(--line);
-    border-radius:16px;padding:20px;margin-bottom:14px;box-shadow:0 1px 3px rgba(15,23,42,.04)}
-  .head{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
-  .num{flex:0 0 auto;width:30px;height:30px;border-radius:50%;
-    background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
-    color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;
-    justify-content:center;box-shadow:0 2px 8px rgba(37,99,235,.25)}
-  .head h2{font-size:16px;line-height:30px;font-weight:700;letter-spacing:-.2px}
-  .head p{font-size:13px;color:var(--muted);line-height:1.4;margin-top:-6px}
+
+  .plan-banner{background:#fff;border:1px solid var(--line);
+    border-radius:14px;padding:16px;margin-bottom:14px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .plan-banner-head{display:flex;align-items:center;
+    justify-content:space-between;gap:10px;margin-bottom:10px}
+  .plan-banner-info{flex:1;min-width:0}
+  .plan-banner-info .label{font-size:10.5px;font-weight:800;
+    color:var(--muted);letter-spacing:1px;text-transform:uppercase;
+    margin-bottom:3px}
+  .plan-banner-info .name{font-size:15px;font-weight:800;
+    display:flex;align-items:center;gap:8px;letter-spacing:-.2px}
+  .plan-banner-info .name .tag{font-size:10px;font-weight:800;
+    padding:3px 8px;border-radius:5px;letter-spacing:.5px;
+    text-transform:uppercase}
+  .tag.free{background:var(--card-2);color:var(--muted);border:1px solid var(--line)}
+  .tag.starter{background:var(--blue-light);color:var(--blue);border:1px solid #bfdbfe}
+  .tag.pro{background:var(--purple-light);color:var(--purple);border:1px solid #ddd6fe}
+  .tag.business{background:var(--orange-light);color:var(--orange);border:1px solid #fed7aa}
+  .plan-banner-info .sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .plan-banner-info .sub b{color:var(--text)}
+  .plan-banner .upgrade-btn{background:var(--blue);color:#fff;
+    padding:9px 14px;font-size:12.5px;font-weight:800;
+    border-radius:9px;border:0;cursor:pointer;font-family:inherit;
+    white-space:nowrap}
+  .plan-banner .upgrade-btn:hover{background:var(--blue-dark)}
+  .plan-banner .upgrade-btn.hidden{display:none}
+
+  .usage-bar{height:8px;background:var(--card-2);border-radius:99px;
+    overflow:hidden;margin-top:4px}
+  .usage-bar span{display:block;height:100%;
+    background:linear-gradient(90deg,var(--blue),var(--purple));
+    border-radius:99px;transition:width .4s ease;
+    width:0%}
+  .usage-bar.warn span{background:linear-gradient(90deg,var(--orange),var(--red))}
+  .usage-bar.full span{background:var(--red)}
+
+  .setup-hero{text-align:center;padding:40px 20px 28px}
+  .setup-hero .icon-big{width:72px;height:72px;border-radius:20px;
+    background:linear-gradient(135deg,var(--blue),var(--purple));
+    display:flex;align-items:center;justify-content:center;
+    font-size:32px;color:#fff;margin:0 auto 18px;
+    box-shadow:0 10px 30px rgba(37,99,235,.35)}
+  .setup-hero h1{font-size:26px;font-weight:800;letter-spacing:-.8px;
+    margin-bottom:8px}
+  .setup-hero p{color:var(--muted);font-size:15px;line-height:1.55;
+    max-width:440px;margin:0 auto}
+  .step-card{background:#fff;border:1px solid var(--line);
+    border-radius:16px;padding:20px;margin-bottom:14px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04);position:relative}
+  .step-card .step-num{position:absolute;top:20px;left:20px;
+    width:28px;height:28px;border-radius:50%;
+    background:linear-gradient(135deg,var(--blue),var(--purple));
+    color:#fff;font-size:13px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(37,99,235,.25)}
+  .step-card h3{font-size:16px;font-weight:800;letter-spacing:-.2px;
+    margin:0 0 8px 40px;line-height:28px}
+  .step-card p{font-size:14px;color:var(--muted);line-height:1.6;
+    margin-left:40px;margin-bottom:12px}
+  .step-card .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-left:40px}
+  .btn-link{display:inline-flex;align-items:center;gap:6px;
+    background:var(--blue-light);color:var(--blue);
+    padding:10px 16px;font-size:13.5px;font-weight:700;
+    border-radius:10px;text-decoration:none;
+    border:1px solid #bfdbfe;transition:.15s}
+  .btn-link:hover{background:#dbeafe}
+
   label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
-  input,textarea,select{
-    width:100%;padding:13px 14px;
+  input,textarea,select{width:100%;padding:13px 14px;
     border:1.5px solid var(--line-strong);border-radius:10px;
     font:inherit;font-size:15px;background:#fff;color:var(--text);
     outline:none;transition:border-color .15s,box-shadow .15s;
-    -webkit-appearance:none;-moz-appearance:none;appearance:none;
-    border-radius:10px;
-  }
-  input:focus,textarea:focus,select:focus{
-    border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)
-  }
-  input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:var(--dim)}
+    -webkit-appearance:none;appearance:none;border-radius:10px}
+  input:focus,textarea:focus,select:focus{border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(37,99,235,.12)}
   input::placeholder,textarea::placeholder{color:var(--dim)}
-  textarea{resize:vertical;line-height:1.6;min-height:120px;font-family:inherit;
-    border-radius:10px}
-  select{
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat:no-repeat;
-    background-position:right 14px center;
-    padding-right:40px;
-  }
+  textarea{resize:vertical;line-height:1.6;min-height:120px;
+    font-family:inherit;border-radius:10px}
+  input:disabled{background:var(--card-2);opacity:.7;cursor:not-allowed}
   .mb{margin-bottom:14px}
   .mb:last-child{margin-bottom:0}
-  button{font:inherit;font-weight:700;border:0;border-radius:10px;cursor:pointer;
+
+  button{font:inherit;border:0;cursor:pointer;
     transition:background .15s,transform .1s,opacity .15s;
-    -webkit-appearance:none;appearance:none;
     -webkit-tap-highlight-color:transparent}
   button:disabled{opacity:.5;cursor:not-allowed}
   button:active:not(:disabled){transform:scale(.98)}
+
+  .btn-primary{width:100%;background:var(--blue);color:#fff;padding:15px;
+    font-size:15px;font-weight:700;border-radius:12px;
+    box-shadow:0 4px 14px rgba(37,99,235,.25);
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    min-height:52px}
+  .btn-primary:hover:not(:disabled){background:var(--blue-dark)}
+  .btn-primary .spinner{width:16px;height:16px;
+    border:2px solid rgba(255,255,255,.3);border-top-color:#fff;
+    border-radius:50%;animation:spin .6s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .alert{padding:14px 16px;border-radius:12px;font-size:14px;
+    line-height:1.5;margin-bottom:14px;display:flex;gap:10px;
+    align-items:flex-start}
+  .alert .ic{flex:0 0 auto;font-size:16px;line-height:1.3}
+  .alert.info{background:var(--blue-light);color:#1e40af;border:1px solid #bfdbfe}
+  .alert.ok{background:var(--green-light);color:#166534;border:1px solid #86efac}
+  .alert.warn{background:var(--orange-light);color:#9a3412;border:1px solid #fed7aa}
+  .alert.err{background:var(--red-light);color:#991b1b;border:1px solid #fecaca}
+
+  .step{background:#fff;border:1px solid var(--line);
+    border-radius:16px;padding:20px;margin-bottom:14px;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
+  .head{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}
+  .num{flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+    background:linear-gradient(135deg,var(--blue) 0%,var(--purple) 100%);
+    color:#fff;font-size:14px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 2px 8px rgba(37,99,235,.25)}
+  .head h2{font-size:16px;line-height:30px;font-weight:700;letter-spacing:-.2px}
+  .head p{font-size:13px;color:var(--muted);line-height:1.4;margin-top:-6px}
+
   .paste-zone{background:linear-gradient(135deg,var(--blue-light) 0%,#f5f3ff 100%);
     border:1.5px solid #c7d2fe;border-radius:14px;padding:16px;margin-bottom:16px}
-  .paste-zone .label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-  .paste-zone .label-row .lbl{font-size:13.5px;font-weight:700;color:#3730a3;
-    display:flex;align-items:center;gap:6px}
+  .paste-zone .label-row{display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:10px}
+  .paste-zone .label-row .lbl{font-size:13.5px;font-weight:700;color:#3730a3}
   .paste-zone .label-row .hint{font-size:11.5px;color:var(--muted);font-weight:600}
   .paste-zone textarea{background:#fff;border-color:#c7d2fe;min-height:130px;
     font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     font-size:13.5px;line-height:1.7}
-  .paste-zone .btn-paste-add{width:100%;margin-top:10px;background:var(--blue);color:#fff;
-    padding:14px;font-size:14.5px;border-radius:10px;display:flex;align-items:center;
-    justify-content:center;gap:8px;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+  .paste-zone .btn-paste-add{width:100%;margin-top:10px;background:var(--blue);
+    color:#fff;padding:14px;font-size:14.5px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    box-shadow:0 2px 8px rgba(37,99,235,.25)}
   .paste-zone .btn-paste-add:disabled{background:#94a3b8;box-shadow:none}
-  .or-divider{display:flex;align-items:center;gap:12px;color:var(--dim);font-size:12px;
-    font-weight:600;text-transform:uppercase;letter-spacing:1px;margin:16px 0}
-  .or-divider::before,.or-divider::after{content:"";flex:1;height:1px;background:var(--line)}
-  .add-row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:stretch}
+
+  .or-divider{display:flex;align-items:center;gap:12px;color:var(--dim);
+    font-size:12px;font-weight:600;text-transform:uppercase;
+    letter-spacing:1px;margin:16px 0}
+  .or-divider::before,.or-divider::after{content:"";flex:1;height:1px;
+    background:var(--line)}
+
+  .add-row{display:grid;grid-template-columns:1fr auto;gap:8px}
   .btn-add{background:var(--text);color:#fff;padding:0 20px;font-size:14px;
-    display:flex;align-items:center;gap:6px;white-space:nowrap}
+    display:flex;align-items:center;gap:6px;white-space:nowrap;font-weight:700;
+    border-radius:10px}
+
   .chip-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
   .chip{display:inline-flex;align-items:center;gap:8px;background:var(--blue-light);
-    border:1px solid #bfdbfe;border-radius:99px;padding:6px 6px 6px 14px;font-size:13.5px;
-    max-width:100%;color:#1e40af;font-weight:600}
+    border:1px solid #bfdbfe;border-radius:99px;padding:6px 6px 6px 14px;
+    font-size:13.5px;max-width:100%;color:#1e40af;font-weight:600}
   .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
   .chip-x{width:22px;height:22px;border-radius:50%;background:#bfdbfe;color:#1e40af;
-    font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center;
-    flex:0 0 auto;font-weight:700}
+    font-size:15px;line-height:1;display:flex;align-items:center;
+    justify-content:center;flex:0 0 auto;font-weight:700;cursor:pointer;border:0}
+
   .empty{margin-top:14px;padding:22px 16px;text-align:center;font-size:13.5px;
-    color:var(--muted);border:1.5px dashed var(--line-strong);border-radius:12px;background:var(--card-2)}
-  .recip-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;padding-top:12px;
-    border-top:1px solid var(--line)}
-  .tool-btn{background:var(--card-2);border:1px solid var(--line);color:var(--muted);
-    padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;
-    display:flex;align-items:center;gap:5px}
+    color:var(--muted);border:1.5px dashed var(--line-strong);
+    border-radius:12px;background:var(--card-2)}
+
+  .recip-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;
+    padding-top:12px;border-top:1px solid var(--line)}
+  .tool-btn{background:var(--card-2);border:1px solid var(--line);
+    color:var(--muted);padding:8px 12px;border-radius:8px;font-size:12px;
+    font-weight:600;cursor:pointer}
+  .tool-btn:hover{color:var(--text);border-color:var(--line-strong);background:#fff}
+
   .counter{margin-top:10px;font-size:13px;color:var(--muted);display:flex;
     justify-content:space-between;flex-wrap:wrap;gap:8px}
   .counter b{color:var(--text);font-weight:700}
-  .counter .dup{color:var(--yellow)}
+
   .filter-box{position:relative;margin-top:10px}
   .filter-box input{padding-left:36px;font-size:14px;background:var(--card-2)}
-  .filter-box .icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  .filter-box .icon{position:absolute;left:13px;top:50%;
+    -webkit-transform:translateY(-50%);transform:translateY(-50%);
     color:var(--dim);font-size:14px;pointer-events:none}
+
   .meta-row{display:flex;justify-content:space-between;align-items:center;
     font-size:12px;color:var(--muted);margin-top:8px}
   .meta-row .warn{color:var(--yellow);font-weight:600}
+
   .template-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
-  .tpl-btn{background:var(--card-2);border:1px solid var(--line);color:var(--text);
-    padding:7px 12px;border-radius:7px;font-size:12px;font-weight:600;
-    display:inline-flex;align-items:center;gap:4px}
+  .tpl-btn{background:var(--card-2);border:1px solid var(--line);
+    color:var(--text);padding:7px 12px;border-radius:7px;font-size:12px;
+    font-weight:600;cursor:pointer}
   .tpl-btn.save{background:var(--green-light);border-color:#86efac;color:#166534}
-  .tpl-btn.del{background:var(--red-light);border-color:#fecaca;color:#991b1b;padding:7px 9px}
-  .send-btn{width:100%;background:var(--blue);color:#fff;padding:17px;font-size:16px;
-    font-weight:800;border-radius:14px;margin-bottom:10px;
-    box-shadow:0 4px 16px rgba(37,99,235,.25);display:flex;align-items:center;
-    justify-content:center;gap:8px}
+  .tpl-btn.del{background:var(--red-light);border-color:#fecaca;
+    color:#991b1b;padding:7px 9px}
+
+  .send-btn{width:100%;background:var(--blue);color:#fff;padding:17px;
+    font-size:16px;font-weight:800;border-radius:14px;margin-bottom:10px;
+    box-shadow:0 4px 16px rgba(37,99,235,.25);
+    display:flex;align-items:center;justify-content:center;gap:8px}
+  .send-btn:hover:not(:disabled){background:var(--blue-dark)}
   .send-btn.sending{background:var(--muted);box-shadow:none}
+  .send-btn.blocked{background:var(--red);box-shadow:none}
+  .send-btn.blocked:hover:not(:disabled){background:#b91c1c}
+
   .test-btn{width:100%;background:var(--card);color:var(--text);
     border:1.5px solid var(--line-strong);padding:14px;font-size:14px;
-    border-radius:12px;margin-bottom:14px}
-  .preview-btn{background:transparent;border:1px solid var(--line);color:var(--muted);
-    padding:7px 12px;border-radius:8px;font-size:12px;font-weight:600;
-    display:inline-flex;align-items:center;gap:5px}
-  .schedule-box{background:var(--orange-light);border:1.5px solid #fed7aa;
-    border-radius:14px;padding:18px;margin-bottom:14px}
+    border-radius:12px;margin-bottom:14px;font-weight:700}
+
+  .schedule-box{background:var(--orange-light);
+    border:1.5px solid #fed7aa;border-radius:14px;
+    padding:18px;margin-bottom:14px}
   .schedule-box h3{font-size:14px;margin-bottom:12px;color:#9a3412;
     display:flex;align-items:center;gap:8px;font-weight:700}
-  .sched-row{display:flex;gap:8px;align-items:stretch}
+  .sched-row{display:flex;gap:8px}
   @media (max-width:520px){.sched-row{flex-direction:column}}
   .sched-row input{flex:1;background:#fff}
-  .btn-sched{background:var(--orange);color:#fff;padding:0 20px;font-size:14px;
-    display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .btn-sched{background:var(--orange);color:#fff;padding:0 20px;
+    font-size:14px;white-space:nowrap;font-weight:700;border-radius:10px}
   @media (max-width:520px){.btn-sched{padding:14px 20px}}
   .sched-list{margin-top:14px}
   .sched-item{display:flex;justify-content:space-between;align-items:center;
-    padding:11px 13px;background:#fff;border:1px solid var(--line);border-radius:10px;
-    margin-bottom:8px;font-size:13px;gap:10px}
+    padding:11px 13px;background:#fff;border:1px solid var(--line);
+    border-radius:10px;margin-bottom:8px;font-size:13px;gap:10px}
   .sched-item .info{flex:1;min-width:0}
   .sched-item .info b{display:block;font-size:13.5px;margin-bottom:1px;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .sched-item .info span{color:var(--muted);font-size:12px}
-  .sched-item .cancel{background:var(--red-light);color:#991b1b;border:1px solid #fecaca;
-    padding:6px 11px;border-radius:6px;font-size:12px}
-  .no-sched{font-size:12.5px;color:var(--muted);padding:10px 0;text-align:center}
-  .progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;
-    margin-top:12px;display:none}
+  .sched-item .cancel{background:var(--red-light);color:#991b1b;
+    border:1px solid #fecaca;padding:6px 11px;border-radius:6px;
+    font-size:12px;font-weight:700}
+  .no-sched{font-size:12.5px;color:var(--muted);padding:10px 0;
+    text-align:center}
+
+  .progress{height:6px;background:var(--line);border-radius:99px;
+    overflow:hidden;margin-top:12px;display:none}
   .progress.on{display:block}
   .progress span{display:block;height:100%;width:35%;
-    background:linear-gradient(90deg,var(--blue) 0%,var(--purple) 100%);
+    background:linear-gradient(90deg,var(--blue),var(--purple));
     border-radius:99px;animation:slide 1.2s ease-in-out infinite}
-  @keyframes slide{
-    0%{transform:translateX(-100%)}
-    100%{transform:translateX(330%)}
-  }
-  .status{margin-top:12px;padding:14px 16px;border-radius:12px;font-size:14px;
-    display:none;line-height:1.5;border:1px solid transparent}
+  @keyframes slide{0%{transform:translateX(-100%)}
+    100%{transform:translateX(330%)}}
+
+  .status{margin-top:12px;padding:14px 16px;border-radius:12px;
+    font-size:14px;display:none;line-height:1.5;border:1px solid transparent}
   .status.on{display:block}
   .status.info{background:var(--blue-light);color:#1e40af;border-color:#bfdbfe}
   .status.err{background:var(--red-light);color:#991b1b;border-color:#fecaca}
   .status.ok{background:var(--green-light);color:#166534;border-color:#86efac}
-  .results{display:none;margin-top:14px;background:var(--card);border:1px solid var(--line);
-    border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+
+  .results{display:none;margin-top:14px;background:var(--card);
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:0 1px 3px rgba(15,23,42,.04)}
   .results.on{display:block}
-  .results-head{display:flex;padding:14px 16px;border-bottom:1px solid var(--line);gap:8px}
-  .stat-pill{flex:1;text-align:center;padding:10px 8px;background:var(--card-2);border-radius:10px}
+  .results-head{display:flex;padding:14px 16px;
+    border-bottom:1px solid var(--line);gap:8px}
+  .stat-pill{flex:1;text-align:center;padding:10px 8px;
+    background:var(--card-2);border-radius:10px}
   .stat-pill .n{font-size:22px;font-weight:800;line-height:1}
   .stat-pill .l{font-size:11px;color:var(--muted);margin-top:4px;
     text-transform:uppercase;letter-spacing:.5px;font-weight:700}
@@ -204,276 +315,684 @@
     padding:12px 16px;border-top:1px solid var(--line)}
   .results-actions button{background:var(--card-2);border:1px solid var(--line);
     color:var(--text);padding:11px;font-size:12.5px;border-radius:8px;
-    display:flex;align-items:center;justify-content:center;gap:6px}
+    font-weight:700}
+
   .modal{position:fixed;top:0;left:0;right:0;bottom:0;
-    background:rgba(15,23,42,.5);z-index:200;
-    display:none;align-items:flex-end;justify-content:center;
+    background:rgba(15,23,42,.55);z-index:200;display:none;
+    align-items:flex-end;justify-content:center;
     -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
   .modal.on{display:flex}
-  .modal-content{background:var(--card);width:100%;max-width:640px;max-height:90vh;
-    border-radius:16px 16px 0 0;overflow:hidden;display:flex;flex-direction:column;
-    box-shadow:0 -10px 40px rgba(15,23,42,.2)}
-  .modal-head{padding:16px 20px;border-bottom:1px solid var(--line);
-    display:flex;align-items:center;justify-content:space-between;flex:0 0 auto}
-  .modal-head h3{font-size:15px;font-weight:700}
-  .modal-close{background:transparent;border:0;color:var(--muted);font-size:24px;
-    padding:0;width:32px;height:32px;cursor:pointer;line-height:1;
-    -webkit-appearance:none;appearance:none}
-  .modal-body{overflow-y:auto;flex:1;padding:0;
+  .modal-content{background:#fff;width:100%;max-width:560px;max-height:92vh;
+    border-radius:20px 20px 0 0;overflow:hidden;display:flex;
+    flex-direction:column}
+  .modal-head{padding:18px 22px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between}
+  .modal-head h3{font-size:16px;font-weight:800}
+  .modal-close{background:transparent;border:0;color:var(--muted);
+    font-size:24px;padding:0;width:32px;height:32px;cursor:pointer;line-height:1}
+  .modal-body{overflow-y:auto;flex:1;padding:20px 22px 24px;
     -webkit-overflow-scrolling:touch}
-  .preview-meta{padding:14px 20px;background:var(--card-2);
-    border-bottom:1px solid var(--line);font-size:13px}
-  .preview-meta .row{margin-bottom:8px}
-  .preview-meta .k{color:var(--muted);font-size:10.5px;text-transform:uppercase;
-    letter-spacing:.7px;font-weight:700;margin-bottom:2px}
-  .preview-meta .v{color:var(--text);word-break:break-word;font-weight:500}
-  .preview-frame{padding:22px;font-size:14px;line-height:1.7;background:#fff;
-    color:#111;margin:20px;border-radius:10px;border:1px solid var(--line)}
-  .preview-frame p{margin:0 0 12px}
+
   .toast{position:fixed;bottom:24px;left:50%;
     -webkit-transform:translateX(-50%) translateY(100px);
     transform:translateX(-50%) translateY(100px);
-    background:var(--text);color:#fff;padding:12px 20px;border-radius:99px;
-    font-size:13.5px;font-weight:600;z-index:300;
+    background:var(--text);color:#fff;padding:12px 20px;
+    border-radius:99px;font-size:13.5px;font-weight:600;z-index:300;
     -webkit-transition:-webkit-transform .3s cubic-bezier(.2,.8,.3,1);
     transition:transform .3s cubic-bezier(.2,.8,.3,1);
-    box-shadow:0 10px 30px rgba(15,23,42,.25);
-    display:flex;align-items:center;gap:8px;max-width:calc(100% - 40px)}
+    box-shadow:0 10px 30px rgba(15,23,42,.25);display:flex;
+    align-items:center;gap:8px;max-width:calc(100% - 40px)}
   .toast.on{-webkit-transform:translateX(-50%) translateY(0);
     transform:translateX(-50%) translateY(0)}
+  .toast .ic{flex:0 0 auto}
   .toast.ok .ic{color:#4ade80}
   .toast.err .ic{color:#f87171}
+
   .hidden{display:none!important}
+
+  .loading-screen{position:fixed;top:0;left:0;right:0;bottom:0;
+    background:var(--bg);display:flex;align-items:center;
+    justify-content:center;z-index:100;flex-direction:column;gap:16px}
+  .loading-screen .spinner{width:32px;height:32px;
+    border:3px solid var(--line);border-top-color:var(--blue);
+    border-radius:50%;animation:spin .7s linear infinite}
+  .loading-screen p{font-size:14px;color:var(--muted)}
+  .loading-screen.hidden{display:none}
 </style>
 </head>
 <body>
 
+<div class="loading-screen" id="loading">
+  <div class="spinner"></div>
+  <p>Loading...</p>
+</div>
+
 <nav class="navbar">
-  <a href="index.html" class="back">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    Back
-  </a>
-  <div class="brand"><div class="mark">T</div>Bulk Mailer</div>
+  <a href="dashboard.html" class="back">Back</a>
+  <div class="brand">
+    <div class="mark">T</div>
+    Bulk Mailer
+  </div>
+  <button class="settings-btn hidden" id="btnSettings" type="button">Settings</button>
 </nav>
 
 <div class="wrap">
 
-  <div class="step">
-    <div class="head">
-      <div class="num">1</div>
-      <div><h2>Who is this from?</h2><p>Your name and email as your customers will see it.</p></div>
+  <div class="plan-banner hidden" id="planBanner">
+    <div class="plan-banner-head">
+      <div class="plan-banner-info">
+        <div class="label">Your plan</div>
+        <div class="name">
+          <span id="planName">Free</span>
+          <span class="tag free" id="planTag">FREE</span>
+        </div>
+        <div class="sub" id="planQuota"><b>0</b> / 5 sends used today</div>
+      </div>
+      <button class="upgrade-btn hidden" id="btnUpgrade">Upgrade</button>
     </div>
-    <div class="mb">
-      <label for="senderName">Your name or business name</label>
-      <input type="text" id="senderName" placeholder="e.g. Harps Tech" autocomplete="off">
-    </div>
-    <div class="mb">
-      <label for="senderEmail">Your email address</label>
-      <input type="text" id="senderEmail" inputmode="email" placeholder="hello@yourdomain.com" autocomplete="off">
-      <p style="font-size:12.5px;color:var(--muted);margin-top:6px">Must be a verified sender in your Brevo account.</p>
+    <div class="usage-bar" id="usageBar">
+      <span id="usageFill"></span>
     </div>
   </div>
 
-  <div class="step">
-    <div class="head">
-      <div class="num">2</div>
-      <div><h2>Who are you sending to?</h2><p>Paste your whole list at once — one per line or comma-separated.</p></div>
+  <div id="setupView" class="hidden">
+
+    <div class="setup-hero">
+      <div class="icon-big">Mail</div>
+      <h1>Connect your Brevo</h1>
+      <p>You need a free Brevo account to send emails. It takes 3 minutes, and it is free forever.</p>
     </div>
 
-    <div class="paste-zone">
-      <div class="label-row">
-        <div class="lbl"><span>📋</span> Paste your emails here</div>
-        <div class="hint" id="pasteCounter">0 emails ready</div>
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <h3>Create a free Brevo account</h3>
+      <p>Brevo gives you 300 free emails every day. No credit card.</p>
+      <div class="btn-row">
+        <a class="btn-link" href="https://app.brevo.com/account/register" target="_blank" rel="noopener">Sign up at Brevo</a>
       </div>
-      <textarea id="pasteArea" placeholder="ada@example.com&#10;chidi@example.com&#10;tunde@example.com" spellcheck="false"></textarea>
-      <button class="btn-paste-add" id="btnPasteAdd" type="button" disabled>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        Add all of them
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <h3>Verify your sender email</h3>
+      <p>Inside Brevo go to Senders, Domains and Dedicated IPs then Senders then Add a sender. Enter the email you want to send from. Brevo emails you a confirmation link. Click it.</p>
+      <div class="btn-row">
+        <a class="btn-link" href="https://app.brevo.com/senders/list" target="_blank" rel="noopener">Open Brevo Senders</a>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <h3>Generate your API key</h3>
+      <p>In Brevo go to SMTP and API then API Keys then Generate a new API key. Copy it. It starts with xkeysib-</p>
+      <div class="btn-row">
+        <a class="btn-link" href="https://app.brevo.com/settings/keys/api" target="_blank" rel="noopener">Open API Keys</a>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <h3>Paste your API key</h3>
+      <p>Your key stays in your browser. It never touches our servers.</p>
+      <div class="mb">
+        <label for="setupKey">Brevo API key</label>
+        <input type="text" id="setupKey" placeholder="xkeysib-..." autocomplete="off" spellcheck="false" style="font-family:ui-monospace,monospace;font-size:13.5px">
+      </div>
+      <div class="mb">
+        <label for="setupSender">Your verified sender email</label>
+        <input type="text" id="setupSender" inputmode="email" placeholder="hello@yourdomain.com" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="mb">
+        <label for="setupName">Your display name (optional)</label>
+        <input type="text" id="setupName" placeholder="e.g. Harps Tech" autocomplete="off">
+      </div>
+      <button class="btn-primary" id="btnSetupSave">
+        <span>Connect my Brevo</span>
+      </button>
+      <div class="status" id="setupStatus" style="margin-left:0"></div>
+    </div>
+
+  </div>
+
+  <div id="mailerView" class="hidden">
+
+    <div id="verifyBanner" class="alert warn hidden">
+      <span class="ic">!</span>
+      <span>Sender not verified in Brevo yet. <a href="https://app.brevo.com/senders/list" target="_blank" rel="noopener" style="color:inherit;font-weight:700">Verify it now</a></span>
+    </div>
+
+    <div id="limitBanner" class="alert err hidden">
+      <span class="ic">!</span>
+      <span id="limitBannerText">You have hit your daily limit.</span>
+    </div>
+
+    <div class="step">
+      <div class="head">
+        <div class="num">1</div>
+        <div>
+          <h2>Who is this from?</h2>
+          <p>From your Brevo account.</p>
+        </div>
+      </div>
+      <div class="mb">
+        <label>Your display name</label>
+        <input type="text" id="senderName" placeholder="e.g. Harps Tech" autocomplete="off">
+      </div>
+      <div class="mb">
+        <label>Your sender email</label>
+        <input type="text" id="senderEmail" readonly>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:6px">
+          Change in <button type="button" id="btnOpenSettings" style="background:none;border:0;color:var(--blue);font-weight:700;font-size:inherit;padding:0;cursor:pointer;text-decoration:underline">Settings</button>.
+        </p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="head">
+        <div class="num">2</div>
+        <div>
+          <h2>Who are you sending to?</h2>
+          <p>Paste your list. One per line or comma-separated.</p>
+        </div>
+      </div>
+
+      <div class="paste-zone">
+        <div class="label-row">
+          <div class="lbl">Paste your emails here</div>
+          <div class="hint" id="pasteCounter">0 emails ready</div>
+        </div>
+        <textarea id="pasteArea" placeholder="ada@example.com&#10;chidi@example.com" spellcheck="false"></textarea>
+        <button class="btn-paste-add" id="btnPasteAdd" type="button" disabled>
+          Add all of them
+        </button>
+      </div>
+
+      <div class="or-divider">or add one at a time</div>
+
+      <div class="add-row">
+        <input type="text" id="newEmail" inputmode="email" placeholder="customer@email.com" autocomplete="off">
+        <button class="btn-add" id="btnAdd" type="button">Add</button>
+      </div>
+
+      <div class="chip-list" id="chips"></div>
+      <div class="empty" id="empty">No one added yet. Paste your emails above.</div>
+
+      <div id="recipControls" class="hidden">
+        <div class="filter-box">
+          <span class="icon">?</span>
+          <input type="text" id="filterInput" placeholder="Search your list..." autocomplete="off">
+        </div>
+        <div class="recip-tools">
+          <button class="tool-btn" id="btnCopyAll" type="button">Copy all</button>
+          <button class="tool-btn" id="btnCsvImport" type="button">Import CSV</button>
+          <button class="tool-btn" id="btnCsvExport" type="button">Export</button>
+          <button class="tool-btn" id="btnClearAll" type="button">Clear</button>
+          <input type="file" id="csvFile" accept=".csv,.txt,text/csv,text/plain" hidden>
+        </div>
+        <div class="counter">
+          <span><b id="countValid">0</b> valid emails</span>
+          <span id="remainingHint"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="head">
+        <div class="num">3</div>
+        <div>
+          <h2>Subject</h2>
+          <p>This is the line they see before opening.</p>
+        </div>
+      </div>
+      <input type="text" id="subject" placeholder="e.g. New stock just arrived" autocomplete="off" maxlength="200">
+      <div class="meta-row">
+        <span id="subjectHint">Keep it short and clear</span>
+        <span id="subjectCount">0 chars</span>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="head">
+        <div class="num">4</div>
+        <div>
+          <h2>Write your message</h2>
+          <p>Type normally. Blank lines become paragraphs.</p>
+        </div>
+      </div>
+      <div class="template-row" id="templateRow"></div>
+      <textarea id="body" spellcheck="false" placeholder="Hi,&#10;&#10;I wanted to let you know...&#10;&#10;Thanks,&#10;Your Name"></textarea>
+      <div class="meta-row">
+        <button type="button" id="btnPreview" style="background:transparent;border:1px solid var(--line);color:var(--muted);padding:7px 12px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer">Preview</button>
+        <span id="bodyCount">0 chars</span>
+      </div>
+    </div>
+
+    <button class="send-btn" id="btnSend" disabled>
+      <span id="btnSendText">Send to 0 people</span>
+    </button>
+    <button class="test-btn" id="btnTest" type="button">Send one test to myself first</button>
+
+    <div class="schedule-box">
+      <h3>Schedule for later</h3>
+      <div class="sched-row">
+        <input type="datetime-local" id="scheduleTime">
+        <button class="btn-sched" id="btnSchedule" type="button" disabled>Schedule</button>
+      </div>
+      <p style="font-size:12.5px;color:#9a3412;margin-top:10px;line-height:1.5">
+        Keep this page open so it can fire. Schedules also count against your daily limit.
+      </p>
+      <div class="sched-list" id="schedList"></div>
+    </div>
+
+    <div class="progress" id="progress"><span></span></div>
+    <div class="status" id="status"></div>
+
+    <div class="results" id="results">
+      <div class="results-head">
+        <div class="stat-pill ok"><div class="n" id="statSent">0</div><div class="l">Delivered</div></div>
+        <div class="stat-pill no"><div class="n" id="statFailed">0</div><div class="l">Failed</div></div>
+      </div>
+      <div class="results-list" id="resultsList"></div>
+      <div class="results-actions">
+        <button id="btnExportResults" type="button">Export report</button>
+        <button id="btnRetryFailed" type="button">Retry failed</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="modal" id="settingsModal">
+  <div class="modal-content">
+    <div class="modal-head">
+      <h3>Brevo settings</h3>
+      <button class="modal-close" id="btnCloseSettings" type="button">x</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert info">
+        <span class="ic">i</span>
+        <span>Your API key stays in this browser. Nothing sent to our servers.</span>
+      </div>
+      <div class="mb">
+        <label for="modalKey">Brevo API key</label>
+        <input type="text" id="modalKey" placeholder="xkeysib-..." autocomplete="off" spellcheck="false" style="font-family:ui-monospace,monospace;font-size:13.5px">
+      </div>
+      <div class="mb">
+        <label for="modalSender">Your verified sender email</label>
+        <input type="text" id="modalSender" inputmode="email" autocomplete="off">
+      </div>
+      <button class="btn-primary" id="btnSaveSettings" style="margin-bottom:10px">Save changes</button>
+      <button type="button" id="btnDisconnectBrevo" style="width:100%;background:var(--red-light);color:#991b1b;border:1px solid #fecaca;padding:12px;border-radius:10px;font-weight:700;font-size:13.5px;cursor:pointer">
+        Disconnect Brevo account
       </button>
     </div>
-
-    <div class="or-divider">or add one at a time</div>
-
-    <div class="add-row">
-      <input type="text" id="newEmail" inputmode="email" placeholder="customer@email.com" autocomplete="off">
-      <button class="btn-add" id="btnAdd" type="button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        Add
-      </button>
-    </div>
-
-    <div class="chip-list" id="chips"></div>
-    <div class="empty" id="empty">No one added yet — paste your emails above</div>
-
-    <div id="recipControls" class="hidden">
-      <div class="filter-box">
-        <span class="icon">🔍</span>
-        <input type="text" id="filterInput" placeholder="Search your list..." autocomplete="off">
-      </div>
-      <div class="recip-tools">
-        <button class="tool-btn" id="btnCopyAll" type="button"><span>📋</span>Copy all</button>
-        <button class="tool-btn" id="btnCsvImport" type="button"><span>📥</span>Import CSV</button>
-        <button class="tool-btn" id="btnCsvExport" type="button"><span>📤</span>Export list</button>
-        <button class="tool-btn" id="btnClearAll" type="button"><span>🗑️</span>Clear all</button>
-        <input type="file" id="csvFile" accept=".csv,.txt,text/csv,text/plain" hidden>
-      </div>
-      <div class="counter">
-        <span><b id="countValid">0</b> valid emails</span>
-        <span id="dupeInfo" class="hidden">• <span class="dup"><b id="countDupes">0</b> duplicates skipped</span></span>
-      </div>
-    </div>
   </div>
-
-  <div class="step">
-    <div class="head">
-      <div class="num">3</div>
-      <div><h2>Subject</h2><p>This is the line they see before opening.</p></div>
-    </div>
-    <input type="text" id="subject" placeholder="e.g. New stock just arrived" autocomplete="off" maxlength="200">
-    <div class="meta-row">
-      <span id="subjectHint">Keep it short and clear</span>
-      <span id="subjectCount">0 chars</span>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="head">
-      <div class="num">4</div>
-      <div><h2>Write your message</h2><p>Type normally. Blank lines become paragraphs.</p></div>
-    </div>
-    <div class="template-row" id="templateRow"></div>
-    <textarea id="body" spellcheck="false" placeholder="Hi,&#10;&#10;I wanted to let you know...&#10;&#10;Thanks,&#10;Your Name"></textarea>
-    <div class="meta-row">
-      <button class="preview-btn" id="btnPreview" type="button"><span>👁️</span> Preview</button>
-      <span id="bodyCount">0 chars</span>
-    </div>
-  </div>
-
-  <button class="send-btn" id="btnSend" disabled>
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-    <span id="btnSendText">Send to 0 people</span>
-  </button>
-  <button class="test-btn" id="btnTest" type="button">✉️ Send one test to myself first</button>
-
-  <div class="schedule-box">
-    <h3><span>⏰</span> Schedule for later</h3>
-    <div class="sched-row">
-      <input type="datetime-local" id="scheduleTime">
-      <button class="btn-sched" id="btnSchedule" type="button" disabled>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-        Schedule
-      </button>
-    </div>
-    <p style="font-size:12.5px;color:#9a3412;margin-top:10px;line-height:1.5">
-      Keep this page open so it can fire. If you close it, it catches up when you come back.
-    </p>
-    <div class="sched-list" id="schedList"></div>
-  </div>
-
-  <div class="progress" id="progress"><span></span></div>
-  <div class="status" id="status"></div>
-
-  <div class="results" id="results">
-    <div class="results-head">
-      <div class="stat-pill ok"><div class="n" id="statSent">0</div><div class="l">Delivered</div></div>
-      <div class="stat-pill no"><div class="n" id="statFailed">0</div><div class="l">Failed</div></div>
-    </div>
-    <div class="results-list" id="resultsList"></div>
-    <div class="results-actions">
-      <button id="btnExportResults" type="button"><span>📊</span>Export report</button>
-      <button id="btnRetryFailed" type="button"><span>🔁</span>Retry failed</button>
-    </div>
-  </div>
-
 </div>
 
 <div class="modal" id="previewModal">
   <div class="modal-content">
     <div class="modal-head">
       <h3>Preview</h3>
-      <button class="modal-close" id="btnClosePreview" type="button">×</button>
+      <button class="modal-close" id="btnClosePreview" type="button">x</button>
     </div>
     <div class="modal-body">
-      <div class="preview-meta">
-        <div class="row"><div class="k">From</div><div class="v" id="pvFrom">—</div></div>
-        <div class="row"><div class="k">Subject</div><div class="v" id="pvSubject">—</div></div>
-        <div class="row"><div class="k">Sample recipient</div><div class="v" id="pvTo">—</div></div>
+      <div style="padding:14px 20px;background:var(--card-2);border-bottom:1px solid var(--line);font-size:13px;margin:-20px -22px 20px">
+        <div style="margin-bottom:8px">
+          <div style="color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:2px">From</div>
+          <div id="pvFrom">-</div>
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:2px">Subject</div>
+          <div id="pvSubject">-</div>
+        </div>
+        <div>
+          <div style="color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;font-weight:700;margin-bottom:2px">Sample</div>
+          <div id="pvTo">-</div>
+        </div>
       </div>
-      <div class="preview-frame" id="pvBody">Nothing to preview yet</div>
+      <div id="pvBody" style="font-size:14px;line-height:1.7;padding:16px;background:var(--card-2);border-radius:10px">Nothing to preview yet</div>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast">
-  <span class="ic" id="toastIc">✓</span>
+  <span class="ic" id="toastIc">OK</span>
   <span id="toastMsg"></span>
 </div>
 
-<script>
-(function () {
-  "use strict";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, serverTimestamp }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  var EP_A = "https://bulk-email-sender--okugbepraise";
-  var EP_B = ".replit.app";
-  var EP_C = "/api/send";
-  var ENDPOINT = EP_A + EP_B + EP_C;
-
-  var $ = function (id) { return document.getElementById(id); };
-  var EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  var KEY = "bulkmailer.v2";
-  var SCHEDULE_KEY = "bulkmailer.schedules.v1";
-  var TPL_KEY = "toolme.templates.v1";
-
-  var people = [];
-  var sending = false;
-  var schedules = [];
-  var checkTimer = null;
-  var templates = [];
-  var lastResults = null;
-  var visibleFilter = "";
-
-  var els = {
-    senderName:$("senderName"),senderEmail:$("senderEmail"),newEmail:$("newEmail"),
-    btnAdd:$("btnAdd"),pasteArea:$("pasteArea"),btnPasteAdd:$("btnPasteAdd"),
-    pasteCounter:$("pasteCounter"),chips:$("chips"),empty:$("empty"),
-    subject:$("subject"),body:$("body"),btnSend:$("btnSend"),btnSendText:$("btnSendText"),
-    btnTest:$("btnTest"),btnSchedule:$("btnSchedule"),scheduleTime:$("scheduleTime"),
-    schedList:$("schedList"),status:$("status"),progress:$("progress"),
-    results:$("results"),resultsList:$("resultsList"),statSent:$("statSent"),statFailed:$("statFailed")
+  var firebaseConfig = {
+    apiKey: "AIzaSyDFK5Ogxv7Hpp3a-HWPiC2uIRuz704DuWo",
+    authDomain: "toolmey.firebaseapp.com",
+    projectId: "toolmey",
+    storageBucket: "toolmey.firebasestorage.app",
+    messagingSenderId: "505326805775",
+    appId: "1:505326805775:web:401c9d20f919714caad47a",
+    measurementId: "G-2HGC4BP83Y"
   };
 
-  function esc(s) {
-    return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
-  }
+  var app = initializeApp(firebaseConfig);
+  var auth = getAuth(app);
+  var db = getFirestore(app);
 
-  function setStatus(msg, kind) {
-    if (!msg) { els.status.className = "status"; els.status.textContent = ""; return; }
-    els.status.textContent = msg;
-    els.status.className = "status on " + (kind || "info");
-  }
+  var $ = function (id) { return document.getElementById(id); };
+  var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  var PLANS = {
+    free:     { name: "Free",     limit: 5,    tag: "free" },
+    starter:  { name: "Starter",  limit: 50,   tag: "starter" },
+    pro:      { name: "Pro",      limit: 200,  tag: "pro" },
+    business: { name: "Business", limit: 1000, tag: "business" }
+  };
+
+  var CFG_KEY = "toolmey.brevo.v1";
+  var DATA_KEY = "toolmey.bulk.v2";
+  var SCHEDULE_KEY = "toolmey.schedules.v1";
+  var TPL_KEY = "toolmey.templates.v1";
+
+  var brevo = { apiKey: "", senderEmail: "", senderName: "" };
+  var people = [];
+  var schedules = [];
+  var templates = [];
+  var sending = false;
+  var checkTimer = null;
+  var lastResults = null;
+  var visibleFilter = "";
+  var senderVerified = false;
+
+  var currentUser = null;
+  var userData = { plan: "free", dailyLimit: 5, sentToday: 0, lastSendDate: "" };
 
   var toastTimer = null;
   function toast(msg, kind) {
     $("toastMsg").textContent = msg;
-    $("toastIc").textContent = kind === "err" ? "!" : "✓";
+    $("toastIc").textContent = kind === "err" ? "!" : "OK";
     $("toast").className = "toast on " + (kind || "ok");
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { $("toast").className = "toast " + (kind || "ok"); }, 2400);
+    toastTimer = setTimeout(function () {
+      $("toast").className = "toast " + (kind || "ok");
+    }, 2400);
   }
 
-  function toHtml(text) {
-    var s = String(text);
-    if (/<(p|br|div|h[1-6]|ul|ol|li|a|strong|em|b|i)\b[^>]*>/i.test(s)) return s;
-    s = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var paras = s.split(/\n\s*\n/);
-    return paras.map(function (p) { return "<p>" + p.replace(/\n/g, "<br>") + "</p>"; }).join("");
+  function setStatus(elId, msg, kind) {
+    var el = $(elId);
+    if (!msg) { el.className = "status"; el.textContent = ""; return; }
+    el.textContent = msg;
+    el.className = "status on " + (kind || "info");
   }
 
-  // PEOPLE — no name field, ever
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g,"&amp;").replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+
+  function todayKey() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+
+  function loadBrevo() {
+    try {
+      var raw = localStorage.getItem(CFG_KEY);
+      if (raw) brevo = Object.assign(brevo, JSON.parse(raw));
+    } catch (e) {}
+  }
+  function saveBrevo() {
+    try { localStorage.setItem(CFG_KEY, JSON.stringify(brevo)); } catch (e) {}
+  }
+  function isConfigured() {
+    return brevo.apiKey && brevo.apiKey.indexOf("xkeysib-") === 0 && EMAIL_RE.test(brevo.senderEmail);
+  }
+
+  async function validateBrevoKey(apiKey) {
+    try {
+      var res = await fetch("https://api.brevo.com/v3/account", {
+        method: "GET",
+        headers: { "api-key": apiKey, "Accept": "application/json" }
+      });
+      if (!res.ok) {
+        if (res.status === 401) return { ok: false, error: "API key is invalid or revoked." };
+        return { ok: false, error: "Could not verify key (error " + res.status + ")." };
+      }
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: "Network error. Check your internet connection." };
+    }
+  }
+
+  async function checkSenderVerified(senderEmail) {
+    try {
+      var res = await fetch("https://api.brevo.com/v3/senders", {
+        method: "GET",
+        headers: { "api-key": brevo.apiKey, "Accept": "application/json" }
+      });
+      if (!res.ok) return false;
+      var data = await res.json();
+      if (!data.senders || !Array.isArray(data.senders)) return false;
+      var target = senderEmail.toLowerCase();
+      return data.senders.some(function (s) {
+        return s.email && s.email.toLowerCase() === target && s.active === true;
+      });
+    } catch (e) { return false; }
+  }
+
+  $("btnSetupSave").addEventListener("click", async function () {
+    var key = $("setupKey").value.trim();
+    var sender = $("setupSender").value.trim().toLowerCase();
+    var name = $("setupName").value.trim();
+
+    setStatus("setupStatus", "");
+    if (!key) return setStatus("setupStatus", "Paste your Brevo API key.", "err");
+    if (key.indexOf("xkeysib-") !== 0) return setStatus("setupStatus", "Key should start with xkeysib-", "err");
+    if (!EMAIL_RE.test(sender)) return setStatus("setupStatus", "Enter a valid sender email.", "err");
+
+    var btn = this;
+    btn.disabled = true;
+    btn.innerHTML = 'Verifying...';
+    setStatus("setupStatus", "Checking your key with Brevo...", "info");
+
+    var result = await validateBrevoKey(key);
+    if (!result.ok) {
+      btn.disabled = false;
+      btn.innerHTML = 'Connect my Brevo';
+      return setStatus("setupStatus", result.error, "err");
+    }
+
+    brevo.apiKey = key;
+    brevo.senderEmail = sender;
+    brevo.senderName = name;
+    saveBrevo();
+
+    setStatus("setupStatus", "Checking sender verification...", "info");
+    senderVerified = await checkSenderVerified(sender);
+
+    btn.disabled = false;
+    btn.innerHTML = 'Connect my Brevo';
+
+    if (!senderVerified) {
+      setStatus("setupStatus", "Key works, but " + sender + " is not verified in your Brevo account yet. Verify it at app.brevo.com/senders, then come back.", "err");
+      return;
+    }
+
+    setStatus("setupStatus", "All good! Loading your mailer...", "ok");
+    toast("Brevo connected", "ok");
+    setTimeout(showMailer, 600);
+  });
+
+  function showSetup() {
+    $("setupView").classList.remove("hidden");
+    $("mailerView").classList.add("hidden");
+    $("planBanner").classList.add("hidden");
+    $("btnSettings").classList.add("hidden");
+  }
+
+  function showMailer() {
+    $("setupView").classList.add("hidden");
+    $("mailerView").classList.remove("hidden");
+    $("planBanner").classList.remove("hidden");
+    $("btnSettings").classList.remove("hidden");
+    loadData();
+    render();
+    renderButtons();
+    updatePasteUI();
+    renderPlanBanner();
+    if (schedules.length) startChecker();
+  }
+
+  function renderPlanBanner() {
+    var plan = PLANS[userData.plan] || PLANS.free;
+    var used = userData.sentToday || 0;
+    var limit = plan.limit;
+
+    $("planName").textContent = plan.name;
+    var tag = $("planTag");
+    tag.textContent = plan.name.toUpperCase();
+    tag.className = "tag " + plan.tag;
+
+    $("planQuota").innerHTML = "<b>" + used + "</b> / " + limit + " sends used today";
+
+    var pct = Math.min(100, (used / limit) * 100);
+    $("usageFill").style.width = pct + "%";
+
+    var bar = $("usageBar");
+    bar.className = "usage-bar";
+    if (pct >= 100) bar.classList.add("full");
+    else if (pct >= 80) bar.classList.add("warn");
+
+    if (userData.plan === "business") {
+      $("btnUpgrade").classList.add("hidden");
+    } else {
+      $("btnUpgrade").classList.remove("hidden");
+    }
+
+    var remaining = Math.max(0, limit - used);
+    if (remaining === 0) {
+      $("limitBanner").classList.remove("hidden");
+      $("limitBannerText").innerHTML = "You have used all " + limit + " sends for today. " + (userData.plan !== "business" ? "Upgrade or wait until midnight." : "Wait until midnight.");
+    } else {
+      $("limitBanner").classList.add("hidden");
+    }
+
+    var el = $("remainingHint");
+    if (el) {
+      el.textContent = remaining + " remaining today";
+      el.style.color = remaining === 0 ? "var(--red)" : remaining <= 5 ? "var(--orange)" : "var(--muted)";
+    }
+  }
+
+  $("btnUpgrade").addEventListener("click", function () {
+    window.location.href = "pricing.html";
+  });
+
+  $("btnSettings").addEventListener("click", function () {
+    $("modalKey").value = brevo.apiKey;
+    $("modalSender").value = brevo.senderEmail;
+    $("settingsModal").classList.add("on");
+  });
+  $("btnCloseSettings").addEventListener("click", function () {
+    $("settingsModal").classList.remove("on");
+  });
+  $("settingsModal").addEventListener("click", function (e) {
+    if (e.target === this) this.classList.remove("on");
+  });
+
+  $("btnSaveSettings").addEventListener("click", async function () {
+    var key = $("modalKey").value.trim();
+    var sender = $("modalSender").value.trim().toLowerCase();
+    if (!key || key.indexOf("xkeysib-") !== 0) { toast("Invalid API key", "err"); return; }
+    if (!EMAIL_RE.test(sender)) { toast("Invalid sender email", "err"); return; }
+
+    var btn = this;
+    btn.disabled = true;
+    btn.textContent = "Verifying...";
+
+    brevo.apiKey = key;
+    var result = await validateBrevoKey(key);
+    if (!result.ok) {
+      btn.disabled = false;
+      btn.textContent = "Save changes";
+      toast(result.error, "err");
+      return;
+    }
+
+    brevo.senderEmail = sender;
+    saveBrevo();
+    senderVerified = await checkSenderVerified(sender);
+
+    btn.disabled = false;
+    btn.textContent = "Save changes";
+    $("settingsModal").classList.remove("on");
+    render();
+    toast(senderVerified ? "Settings saved" : "Saved. Sender not verified yet.", senderVerified ? "ok" : "err");
+
+    if (senderVerified) $("verifyBanner").classList.add("hidden");
+    else $("verifyBanner").classList.remove("hidden");
+  });
+
+  $("btnDisconnectBrevo").addEventListener("click", function () {
+    if (!confirm("Disconnect your Brevo account?")) return;
+    localStorage.removeItem(CFG_KEY);
+    brevo = { apiKey: "", senderEmail: "", senderName: "" };
+    senderVerified = false;
+    $("settingsModal").classList.remove("on");
+    showSetup();
+  });
+
+  $("btnOpenSettings").addEventListener("click", function () {
+    $("btnSettings").click();
+  });
+
+  function loadData() {
+    try { people = JSON.parse(localStorage.getItem(DATA_KEY) || "[]"); }
+    catch (e) { people = []; }
+    people = people.filter(function (p) {
+      return p && typeof p.email === "string" && EMAIL_RE.test(p.email);
+    }).map(function (p) { return { email: p.email }; });
+
+    try { schedules = JSON.parse(localStorage.getItem(SCHEDULE_KEY) || "[]"); }
+    catch (e) { schedules = []; }
+
+    try { templates = JSON.parse(localStorage.getItem(TPL_KEY) || "[]"); }
+    catch (e) { templates = []; }
+
+    $("senderName").value = brevo.senderName || "";
+    $("senderEmail").value = brevo.senderEmail || "";
+
+    try {
+      var u = JSON.parse(localStorage.getItem("toolmey.bulk.form") || "{}");
+      if (u.subject) $("subject").value = u.subject;
+      if (u.body) $("body").value = u.body;
+    } catch (e) {}
+
+    renderTemplates();
+    renderSchedules();
+
+    if (senderVerified) $("verifyBanner").classList.add("hidden");
+    else $("verifyBanner").classList.remove("hidden");
+  }
+
+  function saveData() {
+    try { localStorage.setItem(DATA_KEY, JSON.stringify(people)); } catch (e) {}
+    try { localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedules)); } catch (e) {}
+    try { localStorage.setItem(TPL_KEY, JSON.stringify(templates)); } catch (e) {}
+    try {
+      localStorage.setItem("toolmey.bulk.form", JSON.stringify({
+        subject: $("subject").value,
+        body: $("body").value
+      }));
+    } catch (e) {}
+  }
+
   function addPerson(email) {
     email = String(email || "").trim().toLowerCase();
-    if (!EMAIL.test(email)) return "invalid";
+    if (!EMAIL_RE.test(email)) return "invalid";
     for (var i = 0; i < people.length; i++) {
       if (people[i].email === email) return "dupe";
     }
@@ -496,11 +1015,11 @@
   }
 
   function countFromPaste() {
-    var parts = String(els.pasteArea.value).split(/[\s,;]+/);
+    var parts = String($("pasteArea").value).split(/[\s,;]+/);
     var n = 0, seen = {};
     for (var i = 0; i < parts.length; i++) {
       var p = parts[i].trim().toLowerCase();
-      if (!p || !EMAIL.test(p)) continue;
+      if (!p || !EMAIL_RE.test(p)) continue;
       if (seen[p]) continue;
       seen[p] = true; n++;
     }
@@ -513,163 +1032,147 @@
   }
 
   function render() {
-    renderChips(); renderCounter(); renderButtons(); renderSchedules(); save();
+    renderChips();
+    renderButtons();
+    renderSchedules();
+    renderPlanBanner();
+    saveData();
   }
 
   function renderChips() {
-    var list = els.chips;
+    var list = $("chips");
     list.innerHTML = "";
     var shown = visibleFilter
       ? people.filter(function (p) { return p.email.indexOf(visibleFilter.toLowerCase()) !== -1; })
       : people;
+
     shown.forEach(function (p) {
       var c = document.createElement("div");
       c.className = "chip";
       c.innerHTML = "<span>" + esc(p.email) + "</span>";
       var x = document.createElement("button");
-      x.className = "chip-x"; x.type = "button"; x.innerHTML = "&times;";
+      x.className = "chip-x"; x.type = "button"; x.innerHTML = "x";
       x.onclick = function () { removePerson(p.email); };
-      c.appendChild(x); list.appendChild(c);
+      c.appendChild(x);
+      list.appendChild(c);
     });
-    els.empty.style.display = people.length ? "none" : "block";
-    var ctrl = $("recipControls");
-    if (people.length) ctrl.classList.remove("hidden");
-    else ctrl.classList.add("hidden");
-  }
 
-  function renderCounter() {
+    $("empty").style.display = people.length ? "none" : "block";
+    $("recipControls").classList.toggle("hidden", !people.length);
     $("countValid").textContent = people.length;
-    var dupes = 0;
-    els.newEmail.value.split(/[\s,;]+/).forEach(function (e) {
-      e = e.trim().toLowerCase();
-      if (e && people.some(function (p) { return p.email === e; })) dupes++;
-    });
-    var di = $("dupeInfo");
-    if (dupes) { $("countDupes").textContent = dupes; di.classList.remove("hidden"); }
-    else di.classList.add("hidden");
   }
 
   function renderButtons() {
     var n = people.length;
-    els.btnSend.disabled = sending || n === 0;
-    els.btnSendText.textContent = sending ? "Sending..." : "Send to " + n + " " + (n === 1 ? "person" : "people");
-    els.btnSend.className = "send-btn" + (sending ? " sending" : "");
-    els.btnSchedule.disabled = sending || n === 0 || !els.scheduleTime.value;
+    var plan = PLANS[userData.plan] || PLANS.free;
+    var remaining = Math.max(0, plan.limit - (userData.sentToday || 0));
+    var blocked = remaining === 0;
 
-    var sLen = els.subject.value.length;
+    $("btnSend").disabled = sending || n === 0 || !isConfigured() || blocked;
+    $("btnSendText").textContent = sending
+      ? "Sending..."
+      : blocked
+        ? "Daily limit reached"
+        : "Send to " + n + " " + (n === 1 ? "person" : "people");
+
+    $("btnSend").className = "send-btn" +
+      (sending ? " sending" : "") +
+      (blocked ? " blocked" : "");
+
+    $("btnSchedule").disabled = sending || n === 0 || !$("scheduleTime").value || blocked;
+
+    var sLen = $("subject").value.length;
     $("subjectCount").textContent = sLen + " chars";
     var hint = $("subjectHint");
     if (sLen === 0) { hint.textContent = "Keep it short and clear"; hint.className = ""; }
     else if (sLen < 30) { hint.textContent = "Good length"; hint.className = ""; }
     else if (sLen <= 60) { hint.textContent = "Perfect"; hint.className = ""; }
-    else { hint.textContent = "Too long for mobile — try under 60"; hint.className = "warn"; }
-    $("bodyCount").textContent = els.body.value.length + " chars";
+    else { hint.textContent = "Too long for mobile"; hint.className = "warn"; }
+
+    $("bodyCount").textContent = $("body").value.length + " chars";
   }
 
   function updatePasteUI() {
     var n = countFromPaste();
-    els.pasteCounter.textContent = n + (n === 1 ? " email ready" : " emails ready");
-    els.btnPasteAdd.disabled = n === 0;
+    $("pasteCounter").textContent = n + (n === 1 ? " email ready" : " emails ready");
+    $("btnPasteAdd").disabled = n === 0;
   }
 
-  els.pasteArea.addEventListener("input", updatePasteUI);
-  els.pasteArea.addEventListener("paste", function () { setTimeout(updatePasteUI, 0); });
-
-  // templates
-  function loadTemplates() {
-    try { templates = JSON.parse(localStorage.getItem(TPL_KEY) || "[]"); } catch (e) { templates = []; }
-    renderTemplates();
-  }
-  function saveTemplates() {
-    try { localStorage.setItem(TPL_KEY, JSON.stringify(templates)); } catch (e) {}
-    renderTemplates();
-  }
   function renderTemplates() {
     var row = $("templateRow");
     row.innerHTML = "";
+
     templates.slice(0, 5).forEach(function (t, i) {
       var wrapper = document.createElement("div");
       wrapper.style.display = "inline-flex";
+
       var b = document.createElement("button");
-      b.type = "button"; b.className = "tpl-btn"; b.textContent = "📄 " + t.name;
+      b.type = "button"; b.className = "tpl-btn"; b.textContent = t.name;
       b.onclick = function () {
-        els.subject.value = t.subject || ""; els.body.value = t.body || "";
-        renderButtons(); toast("Loaded \"" + t.name + "\"", "ok");
+        $("subject").value = t.subject || "";
+        $("body").value = t.body || "";
+        renderButtons(); saveData();
+        toast("Loaded " + t.name, "ok");
       };
+
       var del = document.createElement("button");
-      del.type = "button"; del.className = "tpl-btn del"; del.textContent = "×";
+      del.type = "button"; del.className = "tpl-btn del"; del.textContent = "x";
       del.style.marginLeft = "4px";
       del.onclick = function (e) {
         e.stopPropagation();
-        if (!confirm("Delete template \"" + t.name + "\"?")) return;
-        templates.splice(i, 1); saveTemplates();
+        if (!confirm("Delete template?")) return;
+        templates.splice(i, 1); renderTemplates(); saveData();
       };
-      wrapper.appendChild(b); wrapper.appendChild(del); row.appendChild(wrapper);
+
+      wrapper.appendChild(b);
+      wrapper.appendChild(del);
+      row.appendChild(wrapper);
     });
+
     var save = document.createElement("button");
     save.type = "button"; save.className = "tpl-btn save"; save.textContent = "+ Save template";
     save.onclick = function () {
-      if (!els.subject.value.trim() && !els.body.value.trim()) { toast("Write something first", "err"); return; }
+      if (!$("subject").value.trim() && !$("body").value.trim()) { toast("Write something first", "err"); return; }
       var name = prompt("Name this template:", "My message");
       if (!name) return;
-      templates.unshift({ name: name.slice(0, 20), subject: els.subject.value, body: els.body.value });
+      templates.unshift({ name: name.slice(0, 20), subject: $("subject").value, body: $("body").value });
       if (templates.length > 10) templates = templates.slice(0, 10);
-      saveTemplates(); toast("Saved", "ok");
+      renderTemplates(); saveData();
+      toast("Saved", "ok");
     };
     row.appendChild(save);
   }
 
-  // schedules
-  function loadSchedules() {
-    try { schedules = JSON.parse(localStorage.getItem(SCHEDULE_KEY) || "[]"); } catch (e) { schedules = []; }
-  }
-  function saveSchedules() {
-    try { localStorage.setItem(SCHEDULE_KEY, JSON.stringify(schedules)); } catch (e) {}
-  }
-  function scheduleSend() {
-    var problem = problems();
-    if (problem) { setStatus(problem, "err"); return; }
-    var val = els.scheduleTime.value;
-    if (!val) { setStatus("Pick a date and time first.", "err"); return; }
-    var sendAt = new Date(val).getTime();
-    if (isNaN(sendAt)) { setStatus("That date is not valid.", "err"); return; }
-    if (sendAt <= Date.now()) { setStatus("Pick a time in the future.", "err"); return; }
-    schedules.push({
-      id: "sch_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
-      sendAt: sendAt,
-      senderName: els.senderName.value.trim(),
-      senderEmail: els.senderEmail.value.trim(),
-      subject: els.subject.value.trim(),
-      html: els.body.value,
-      recipients: people.slice()
-    });
-    saveSchedules(); renderSchedules();
-    toast("Scheduled for " + new Date(sendAt).toLocaleString(), "ok");
-    els.scheduleTime.value = ""; renderButtons(); startChecker();
-  }
-  function cancelSchedule(id) {
-    schedules = schedules.filter(function (s) { return s.id !== id; });
-    saveSchedules(); renderSchedules(); toast("Cancelled", "ok");
-    if (!schedules.length) stopChecker();
-  }
   function renderSchedules() {
-    if (!schedules.length) { els.schedList.innerHTML = "<div class='no-sched'>Nothing scheduled</div>"; return; }
-    els.schedList.innerHTML = "";
+    if (!schedules.length) {
+      $("schedList").innerHTML = "<div class='no-sched'>Nothing scheduled</div>";
+      return;
+    }
+    $("schedList").innerHTML = "";
     schedules.slice().sort(function (a, b) { return a.sendAt - b.sendAt; }).forEach(function (s) {
       var d = new Date(s.sendAt);
       var div = document.createElement("div");
       div.className = "sched-item";
-      div.innerHTML = "<div class='info'><b>" + esc(s.subject || "(no subject)") + "</b>" +
-        "<span>" + esc(d.toLocaleString()) + " · " + s.recipients.length + " recipient" +
-        (s.recipients.length === 1 ? "" : "s") + "</span></div>" +
+      div.innerHTML =
+        "<div class='info'>" +
+          "<b>" + esc(s.subject || "(no subject)") + "</b>" +
+          "<span>" + esc(d.toLocaleString()) + " - " + s.recipients.length + " recipient" + (s.recipients.length === 1 ? "" : "s") + "</span>" +
+        "</div>" +
         "<button class='cancel' type='button'>Cancel</button>";
-      div.querySelector(".cancel").onclick = function () { cancelSchedule(s.id); };
-      els.schedList.appendChild(div);
+      div.querySelector(".cancel").onclick = function () {
+        schedules = schedules.filter(function (x) { return x.id !== s.id; });
+        renderSchedules(); saveData();
+        toast("Cancelled", "ok");
+        if (!schedules.length) stopChecker();
+      };
+      $("schedList").appendChild(div);
     });
   }
+
   function startChecker() {
     if (checkTimer) return;
-    checkTimer = setInterval(checkSchedules, 15000); checkSchedules();
+    checkTimer = setInterval(checkSchedules, 15000);
+    checkSchedules();
   }
   function stopChecker() {
     if (checkTimer) { clearInterval(checkTimer); checkTimer = null; }
@@ -682,138 +1185,224 @@
     for (var i = 0; i < due.length; i++) {
       var s = due[i];
       schedules = schedules.filter(function (x) { return x.id !== s.id; });
-      saveSchedules(); renderSchedules();
-      setStatus("Sending scheduled: \"" + s.subject + "\"", "info");
-      await sendTo(s.recipients, s.subject, s.html, s.senderName, s.senderEmail);
+      renderSchedules(); saveData();
+      await sendTo(s.recipients, s.subject, s.html);
     }
     if (!schedules.length) stopChecker();
   }
 
+  function scheduleSend() {
+    var problem = problems();
+    if (problem) { setStatus("status", problem, "err"); return; }
+    var val = $("scheduleTime").value;
+    if (!val) { setStatus("status", "Pick a date and time first.", "err"); return; }
+    var sendAt = new Date(val).getTime();
+    if (isNaN(sendAt) || sendAt <= Date.now()) { setStatus("status", "Pick a time in the future.", "err"); return; }
+
+    schedules.push({
+      id: "sch_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7),
+      sendAt: sendAt,
+      subject: $("subject").value.trim(),
+      html: $("body").value,
+      recipients: people.slice()
+    });
+    renderSchedules(); saveData();
+    toast("Scheduled for " + new Date(sendAt).toLocaleString(), "ok");
+    $("scheduleTime").value = "";
+    renderButtons();
+    startChecker();
+  }
+
   function problems() {
-    if (!els.senderName.value.trim()) return "Fill in your name or business name (Step 1).";
-    if (!EMAIL.test(els.senderEmail.value.trim())) return "Enter a valid sender email (Step 1).";
-    if (!people.length) return "Add at least one recipient (Step 2).";
-    if (!els.subject.value.trim()) return "Write a subject (Step 3).";
-    if (!els.body.value.trim()) return "Write your message (Step 4).";
+    if (!isConfigured()) return "Connect your Brevo account first.";
+    if (!senderVerified) return "Sender email is not verified in Brevo yet.";
+    if (!people.length) return "Add at least one recipient.";
+    if (!$("subject").value.trim()) return "Write a subject.";
+    if (!$("body").value.trim()) return "Write your message.";
     return null;
   }
 
-  // SEND — recipients are pure { email }
-  async function sendTo(list, customSubject, customBody, customSenderName, customSenderEmail) {
+  function toHtml(text) {
+    var s = String(text);
+    if (/<(p|br|div|h[1-6]|ul|ol|li|a|strong|em|b|i)\b[^>]*>/i.test(s)) return s;
+    s = s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var paras = s.split(/\n\s*\n/);
+    return paras.map(function (p) { return "<p>" + p.replace(/\n/g, "<br>") + "</p>"; }).join("");
+  }
+
+  async function sendTo(list, customSubject, customBody) {
+    var plan = PLANS[userData.plan] || PLANS.free;
+    var used = userData.sentToday || 0;
+    var remaining = Math.max(0, plan.limit - used);
+
+    if (remaining === 0) {
+      setStatus("status", "You have reached your daily limit of " + plan.limit + " sends. Upgrade to continue.", "err");
+      toast("Daily limit reached", "err");
+      return;
+    }
+
+    if (list.length > remaining) {
+      var proceed = confirm(
+        "You have " + remaining + " sends left today, but you are trying to send " + list.length + ".\n\n" +
+        "Send only the first " + remaining + "?"
+      );
+      if (!proceed) return;
+      list = list.slice(0, remaining);
+    }
+
     sending = true;
-    els.results.className = "results";
-    els.progress.className = "progress on";
-    setStatus("Sending to " + list.length + (list.length === 1 ? " person..." : " people...") + " This can take a few minutes.", "info");
+    $("results").className = "results";
+    $("progress").className = "progress on";
+    setStatus("status", "Sending to " + list.length + " " + (list.length === 1 ? "person" : "people") + "...", "info");
     renderButtons();
 
-    var cleanList = list.map(function (r) { return { email: r.email }; });
+    var rawBody = customBody || $("body").value;
+    var subject = customSubject || $("subject").value.trim();
+    var senderName = $("senderName").value.trim() || brevo.senderName || brevo.senderEmail;
+    var senderEmail = brevo.senderEmail;
+    var htmlBody = toHtml(rawBody);
 
-    var rawBody = customBody || els.body.value;
-    var senderName = customSenderName || els.senderName.value.trim();
-    var senderEmail = customSenderEmail || els.senderEmail.value.trim();
-    var subject = customSubject || els.subject.value.trim();
+    var sent = [];
+    var failed = [];
 
-    try {
-      var res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          senderName: senderName,
-          senderEmail: senderEmail,
-          subject: subject,
-          html: toHtml(rawBody),
-          recipients: cleanList
-        })
-      });
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i];
+      try {
+        var resp = await fetch("https://api.brevo.com/v3/smtp/email", {
+          method: "POST",
+          headers: {
+            "api-key": brevo.apiKey,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            sender: { name: senderName, email: senderEmail },
+            to: [{ email: r.email }],
+            subject: subject,
+            htmlContent: htmlBody
+              .replace(/\{\{\s*name\s*\}\}/gi, "there")
+              .replace(/\{\{\s*email\s*\}\}/gi, r.email)
+          })
+        });
 
-      var text = await res.text();
-      if (!res.ok) {
-        if (res.status === 404) throw new Error("Could not find the server.");
-        if (res.status === 401 || res.status === 403) throw new Error("Server rejected the request. Check Brevo settings.");
-        if (res.status === 429) throw new Error("Too many emails too fast. Wait a few minutes.");
-        throw new Error("Server error " + res.status + ". " + text.slice(0, 120));
+        if (!resp.ok) {
+          var errText = await resp.text();
+          var errMsg = errText.slice(0, 200);
+          try {
+            var parsed = JSON.parse(errText);
+            if (parsed.message) errMsg = parsed.message;
+          } catch (e) {}
+          throw new Error(errMsg);
+        }
+
+        sent.push(r.email);
+
+        if (currentUser) {
+          try {
+            await updateDoc(doc(db, "users", currentUser.uid), {
+              sentToday: increment(1),
+              lastSendDate: todayKey()
+            });
+            userData.sentToday = (userData.sentToday || 0) + 1;
+            renderPlanBanner();
+          } catch (e) {}
+        }
+
+      } catch (err) {
+        failed.push({ email: r.email, error: err.message || "Failed" });
       }
 
-      var data;
-      try { data = JSON.parse(text); } catch (e) { throw new Error("Server returned unexpected data."); }
-
-      var sent = data.sent || [];
-      var failed = data.failed || [];
-      lastResults = { sent: sent, failed: failed };
-      showResults(sent, failed);
-
-      if (failed.length) setStatus("Done. " + sent.length + " delivered, " + failed.length + " failed.", "err");
-      else setStatus("All " + sent.length + " delivered successfully.", "ok");
-      toast("Sent " + sent.length + (failed.length ? ", " + failed.length + " failed" : ""), failed.length ? "err" : "ok");
-    } catch (err) {
-      var msg = err && err.message ? err.message : String(err);
-      if (/Failed to fetch|NetworkError|load failed/i.test(msg)) msg = "Could not reach the server. Is the backend awake?";
-      setStatus(msg, "err"); toast("Send failed", "err");
-    } finally {
-      sending = false;
-      els.progress.className = "progress";
-      renderButtons();
+      await new Promise(function (res) { setTimeout(res, 280); });
     }
+
+    sending = false;
+    $("progress").className = "progress";
+    lastResults = { sent: sent, failed: failed };
+    showResults(sent, failed);
+    renderButtons();
+
+    if (failed.length) {
+      setStatus("status", "Done. " + sent.length + " delivered, " + failed.length + " failed.", "err");
+    } else {
+      setStatus("status", "All " + sent.length + " delivered successfully.", "ok");
+    }
+    toast("Sent " + sent.length + (failed.length ? ", " + failed.length + " failed" : ""), failed.length ? "err" : "ok");
   }
 
   function showResults(sent, failed) {
-    els.statSent.textContent = sent.length;
-    els.statFailed.textContent = failed.length;
+    $("statSent").textContent = sent.length;
+    $("statFailed").textContent = failed.length;
     var html = "";
     failed.forEach(function (f) {
-      html += "<div class='r no'><span class='ic'>×</span><div class='txt'>" + esc(f.email) +
-              "<span class='why'>" + esc(f.error || "Failed") + "</span></div></div>";
+      html += "<div class='r no'><span class='ic'>x</span><div class='txt'>" + esc(f.email) +
+              "<span class='why'>" + esc(f.error) + "</span></div></div>";
     });
     sent.forEach(function (e) {
-      html += "<div class='r ok'><span class='ic'>✓</span><div class='txt'>" + esc(e) + "</div></div>";
+      html += "<div class='r ok'><span class='ic'>OK</span><div class='txt'>" + esc(e) + "</div></div>";
     });
-    els.resultsList.innerHTML = html;
-    els.results.className = "results on";
+    $("resultsList").innerHTML = html;
+    $("results").className = "results on";
   }
 
   function tryAddFromInputs() {
-    var raw = els.newEmail.value.trim();
+    var raw = $("newEmail").value.trim();
     if (!raw) return;
     var r = addMany(raw);
-    els.newEmail.value = ""; els.newEmail.focus();
+    $("newEmail").value = "";
+    $("newEmail").focus();
+
     if (r.added) {
       var msg = "Added " + r.added + (r.added === 1 ? " email" : " emails");
-      if (r.dupes) msg += " · " + r.dupes + " skipped";
-      if (r.invalid) msg += " · " + r.invalid + " invalid";
+      if (r.dupes) msg += ", " + r.dupes + " skipped";
+      if (r.invalid) msg += ", " + r.invalid + " invalid";
       toast(msg, "ok");
-    } else if (r.dupes && !r.invalid) toast("Already on the list", "err");
-    else if (r.invalid) toast("Not a valid email", "err");
+    } else if (r.dupes) toast("Already on the list", "err");
+    else toast("Not a valid email", "err");
     render();
   }
 
-  els.btnAdd.addEventListener("click", tryAddFromInputs);
-  els.newEmail.addEventListener("keydown", function (e) {
+  $("btnAdd").addEventListener("click", tryAddFromInputs);
+  $("newEmail").addEventListener("keydown", function (e) {
     if (e.key === "Enter") { e.preventDefault(); tryAddFromInputs(); }
   });
 
-  els.btnPasteAdd.addEventListener("click", function () {
-    var r = addMany(els.pasteArea.value);
-    els.pasteArea.value = ""; updatePasteUI(); render();
+  $("btnPasteAdd").addEventListener("click", function () {
+    var r = addMany($("pasteArea").value);
+    $("pasteArea").value = "";
+    updatePasteUI(); render();
     if (r.added) {
       var msg = "Added " + r.added + (r.added === 1 ? " email" : " emails");
-      if (r.dupes) msg += " · " + r.dupes + " skipped";
-      if (r.invalid) msg += " · " + r.invalid + " invalid";
+      if (r.dupes) msg += ", " + r.dupes + " skipped";
       toast(msg, "ok");
     } else if (r.dupes) toast("All already on the list", "err");
     else toast("No valid emails found", "err");
   });
 
-  $("filterInput").addEventListener("input", function () { visibleFilter = this.value; renderChips(); });
+  $("pasteArea").addEventListener("input", updatePasteUI);
+
+  $("filterInput").addEventListener("input", function () {
+    visibleFilter = this.value;
+    renderChips();
+  });
 
   $("btnClearAll").addEventListener("click", function () {
     if (!people.length) return;
     if (!confirm("Remove all " + people.length + " recipients?")) return;
-    people = []; visibleFilter = ""; $("filterInput").value = ""; render(); toast("Cleared", "ok");
+    people = []; visibleFilter = ""; $("filterInput").value = "";
+    render(); toast("Cleared", "ok");
   });
 
   $("btnCopyAll").addEventListener("click", function () {
-    if (!people.length) { toast("Nothing to copy", "err"); return; }
-    copyText(people.map(function (p) { return p.email; }).join("\n"));
+    if (!people.length) return;
+    var text = people.map(function (p) { return p.email; }).join("\n");
+    if (navigator.clipboard) navigator.clipboard.writeText(text);
+    else {
+      var t = document.createElement("textarea");
+      t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(t);
+    }
     toast("Copied " + people.length + " emails", "ok");
   });
 
@@ -833,130 +1422,141 @@
   $("btnCsvExport").addEventListener("click", function () {
     if (!people.length) return;
     var csv = "email\n" + people.map(function (p) { return p.email; }).join("\n");
-    downloadBlob(csv, "recipients-" + Date.now() + ".csv", "text/csv");
-    toast("Exported list", "ok");
+    downloadBlob(csv, "recipients-" + Date.now() + ".csv");
+    toast("Exported", "ok");
   });
 
-  function downloadBlob(content, filename, type) {
-    var blob = new Blob([content], { type: type + ";charset=utf-8" });
+  function downloadBlob(content, filename) {
+    var blob = new Blob([content], { type: "text/csv;charset=utf-8" });
     var a = document.createElement("a");
     a.href = URL.createObjectURL(blob); a.download = filename;
     a.click(); URL.revokeObjectURL(a.href);
   }
 
-  function copyText(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText)
-      navigator.clipboard.writeText(text).catch(function () { fallbackCopy(text); });
-    else fallbackCopy(text);
-  }
-  function fallbackCopy(text) {
-    var t = document.createElement("textarea");
-    t.value = text; t.style.position = "fixed"; t.style.opacity = "0";
-    document.body.appendChild(t); t.select();
-    try { document.execCommand("copy"); } catch (e) {}
-    document.body.removeChild(t);
-  }
+  ["senderName", "subject", "body"].forEach(function (id) {
+    $(id).addEventListener("input", function () { renderButtons(); saveData(); });
+  });
 
-  ["senderName", "senderEmail", "subject", "body"].forEach(function (id) {
-    $(id).addEventListener("input", function () {
-      if (els.status.className.indexOf("err") > -1) setStatus("");
-      renderButtons(); save();
-    });
+  $("btnSend").addEventListener("click", function () {
+    var problem = problems();
+    if (problem) { setStatus("status", problem, "err"); toast(problem, "err"); return; }
+    var plan = PLANS[userData.plan] || PLANS.free;
+    var remaining = Math.max(0, plan.limit - (userData.sentToday || 0));
+    var n = people.length;
+    if (n > remaining) {
+      if (!confirm("You only have " + remaining + " sends left today.\n\nSend to the first " + remaining + " recipients?")) return;
+      sendTo(people.slice(0, remaining));
+    } else {
+      if (!confirm("Send to " + n + " " + (n === 1 ? "person" : "people") + "?")) return;
+      sendTo(people.slice());
+    }
+  });
+
+  $("btnSchedule").addEventListener("click", scheduleSend);
+  $("scheduleTime").addEventListener("change", renderButtons);
+
+  $("btnTest").addEventListener("click", function () {
+    var problem = problems();
+    if (problem) { setStatus("status", problem, "err"); return; }
+    sendTo([{ email: brevo.senderEmail }]);
   });
 
   $("btnPreview").addEventListener("click", function () {
-    $("pvFrom").textContent = (els.senderName.value.trim() || "—") + " <" + (els.senderEmail.value.trim() || "—") + ">";
-    $("pvSubject").textContent = els.subject.value.trim() || "(no subject)";
+    $("pvFrom").textContent = (brevo.senderName || "") + " <" + (brevo.senderEmail || "-") + ">";
+    $("pvSubject").textContent = $("subject").value.trim() || "(no subject)";
     $("pvTo").textContent = people[0] ? people[0].email : "(no recipients yet)";
-    var html = toHtml(els.body.value);
-    if (people[0]) html = html.replace(/\{\{\s*email\s*\}\}/gi, people[0].email);
-    $("pvBody").innerHTML = html || "<p style='color:#999'>Nothing to preview yet</p>";
-    $("previewModal").className = "modal on";
+    $("pvBody").innerHTML = toHtml($("body").value) || "<p style='color:#999'>Nothing yet</p>";
+    $("previewModal").classList.add("on");
   });
-  $("btnClosePreview").addEventListener("click", function () { $("previewModal").className = "modal"; });
+  $("btnClosePreview").addEventListener("click", function () { $("previewModal").classList.remove("on"); });
   $("previewModal").addEventListener("click", function (e) {
-    if (e.target === this) this.className = "modal";
-  });
-
-  els.scheduleTime.addEventListener("change", renderButtons);
-
-  els.btnSend.addEventListener("click", function () {
-    var problem = problems();
-    if (problem) { setStatus(problem, "err"); toast(problem, "err"); return; }
-    if (!confirm("Send this message to " + people.length + " " + (people.length === 1 ? "person" : "people") + "?")) return;
-    sendTo(people.slice());
-  });
-
-  els.btnSchedule.addEventListener("click", scheduleSend);
-
-  els.btnTest.addEventListener("click", function () {
-    var me = els.senderEmail.value.trim();
-    if (!EMAIL.test(me)) { setStatus("Fill in your own email in Step 1 first.", "err"); return; }
-    if (!els.senderName.value.trim()) { setStatus("Fill in your name (Step 1).", "err"); return; }
-    if (!els.subject.value.trim()) { setStatus("Write a subject (Step 3).", "err"); return; }
-    if (!els.body.value.trim()) { setStatus("Write your message (Step 4).", "err"); return; }
-    sendTo([{ email: me }]);
+    if (e.target === this) this.classList.remove("on");
   });
 
   $("btnExportResults").addEventListener("click", function () {
     if (!lastResults) return;
     var rows = [["email", "status", "detail"]];
     lastResults.sent.forEach(function (e) { rows.push([e, "sent", ""]); });
-    lastResults.failed.forEach(function (f) { rows.push([f.email, "failed", f.error || ""]); });
+    lastResults.failed.forEach(function (f) { rows.push([f.email, "failed", f.error]); });
     var csv = rows.map(function (r) {
       return r.map(function (c) {
         var s = String(c == null ? "" : c);
         return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
       }).join(",");
     }).join("\n");
-    downloadBlob(csv, "send-report-" + Date.now() + ".csv", "text/csv");
+    downloadBlob(csv, "send-report-" + Date.now() + ".csv");
     toast("Report downloaded", "ok");
   });
 
   $("btnRetryFailed").addEventListener("click", function () {
     if (!lastResults || !lastResults.failed.length) { toast("Nothing to retry", "err"); return; }
     var retry = lastResults.failed.map(function (f) { return { email: f.email }; });
-    if (!confirm("Retry sending to " + retry.length + " failed addresses?")) return;
+    if (!confirm("Retry " + retry.length + " failed addresses?")) return;
     sendTo(retry);
   });
 
-  var t = null;
-  function save() {
-    clearTimeout(t);
-    t = setTimeout(function () {
-      try {
-        localStorage.setItem(KEY, JSON.stringify({
-          senderName: els.senderName.value,
-          senderEmail: els.senderEmail.value,
-          subject: els.subject.value,
-          body: els.body.value,
-          people: people
-        }));
-      } catch (e) {}
-    }, 300);
-  }
+  loadBrevo();
 
-  function load() {
-    var raw;
-    try { raw = localStorage.getItem(KEY); } catch (e) { return; }
-    if (!raw) return;
+  onAuthStateChanged(auth, async function (user) {
+    if (!user) {
+      window.location.href = "auth.html?next=bulk.html";
+      return;
+    }
+
+    currentUser = user;
+
     try {
-      var d = JSON.parse(raw);
-      if (d.senderName) els.senderName.value = d.senderName;
-      if (d.senderEmail) els.senderEmail.value = d.senderEmail;
-      if (d.subject) els.subject.value = d.subject;
-      if (d.body) els.body.value = d.body;
-      if (Array.isArray(d.people)) {
-        people = d.people.filter(function (p) {
-          return p && typeof p.email === "string" && EMAIL.test(p.email);
-        }).map(function (p) { return { email: p.email }; });
+      var snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) {
+        var d = snap.data();
+        userData.plan = d.plan || "free";
+        userData.dailyLimit = d.dailyLimit || PLANS[userData.plan].limit;
+        userData.sentToday = d.sentToday || 0;
+        userData.lastSendDate = d.lastSendDate || "";
+      } else {
+        await setDoc(doc(db, "users", user.uid), {
+          email: user.email,
+          name: user.displayName || (user.email || "").split("@")[0],
+          plan: "free",
+          dailyLimit: 5,
+          sentToday: 0,
+          lastSendDate: todayKey(),
+          createdAt: serverTimestamp()
+        });
       }
     } catch (e) {}
-  }
 
-  load(); loadSchedules(); loadTemplates(); render(); renderButtons(); updatePasteUI();
-  if (schedules.length) startChecker();
-})();
+    var today = todayKey();
+    if (userData.lastSendDate !== today) {
+      userData.sentToday = 0;
+      userData.lastSendDate = today;
+      try {
+        await updateDoc(doc(db, "users", user.uid), {
+          sentToday: 0,
+          lastSendDate: today
+        });
+      } catch (e) {}
+    }
+
+    if (!isConfigured()) {
+      showSetup();
+      $("loading").classList.add("hidden");
+      return;
+    }
+
+    var result = await validateBrevoKey(brevo.apiKey);
+    if (!result.ok) {
+      showSetup();
+      $("loading").classList.add("hidden");
+      setStatus("setupStatus", "Your saved Brevo key no longer works. Reconnect.", "err");
+      return;
+    }
+
+    senderVerified = await checkSenderVerified(brevo.senderEmail);
+
+    showMailer();
+    $("loading").classList.add("hidden");
+  });
 </script>
 </body>
 </html>
